@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CPT Gate Instrument</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+<style>
+:root {
+  --bg: #0c0c0b;
+  --surface: #141412;
+  --surface2: #1c1c19;
+  --border: #2a2a26;
+  --border-bright: #3d3d38;
+  --text: #e8e4dc;
+  --text-dim: #7a7670;
+  --text-mid: #b0ab9f;
+  --green: #4a7c6f;
+  --green-bright: #6aaa98;
+  --green-dim: #2c4a3e;
+  --red: #8c3a2e;
+  --red-bright: #c25040;
+  --red-dim: #4a1f18;
+  --amber: #8c6a1a;
+  --amber-bright: #c49030;
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Libre Baskerville', Georgia, serif;
+  --sans: 'Barlow', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 2.5rem 0 2rem;
+  position: relative;
+}
+
+header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0;
+  width: 180px; height: 2px;
+  background: var(--green);
+}
+
+.header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.header-left {}
+
+.inst-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green-bright);
+  margin-bottom: 0.75rem;
+}
+
+h1 {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+h1 em {
+  font-style: italic;
+  color: var(--green-bright);
+}
+
+.header-desc {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-width: 480px;
+  line-height: 1.5;
+}
+
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.gate-status {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--border-bright);
+  color: var(--text-dim);
+  background: var(--surface);
+  transition: all 0.3s ease;
+}
+
+.gate-status.pass { border-color: var(--green); color: var(--green-bright); background: var(--green-dim); }
+.gate-status.fail { border-color: var(--red); color: var(--red-bright); background: var(--red-dim); }
+
+/* ── MAIN ── */
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-track {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--border-bright);
+  transition: background 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.dot.active { background: var(--green); transform: scale(1.3); }
+.dot.complete { background: var(--green-dim); border: 1px solid var(--green); }
+.dot.failed { background: var(--red-dim); border: 1px solid var(--red); }
+.dot.current { background: var(--amber-bright); transform: scale(1.3); }
+
+/* ── SECTION INTRO ── */
+.section-intro-block {
+  margin: 3rem 0 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-intro-block h2 {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.section-intro-block p {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ── SYSTEM DEFINITION ── */
+.system-def {
+  margin: 2.5rem 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.field-input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  padding: 0.65rem 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.field-input:focus { border-color: var(--green); }
+.field-input::placeholder { color: var(--text-dim); opacity: 0.5; }
+
+textarea.field-input { resize: vertical; min-height: 70px; }
+
+/* ── AXIOM MODULES ── */
+.axiom-module {
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: border-color 0.3s ease;
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.3s ease, border-color 0.3s ease;
+}
+
+.axiom-module.unlocked {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.axiom-module.complete-pass { border-color: var(--green-dim); }
+.axiom-module.complete-fail { border-color: var(--red); }
+.axiom-module.active-module { border-color: var(--amber); }
+
+.axiom-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.axiom-num-badge {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  color: var(--green-bright);
+  background: var(--green-dim);
+  padding: 0.2rem 0.5rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.axiom-title-text {
+  flex: 1;
+}
+
+.axiom-name {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+
+.axiom-sub {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+}
+
+.axiom-score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.s-value {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  transition: color 0.3s ease;
+}
+
+.s-value.good { color: var(--green-bright); }
+.s-value.warn { color: var(--amber-bright); }
+.s-value.bad { color: var(--red-bright); }
+
+.d-value {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--text-dim);
+}
+
+.d-value.pass { color: var(--green); }
+.d-value.fail { color: var(--red-bright); }
+
+/* ── QUESTIONS ── */
+.axiom-body {
+  padding: 1.5rem;
+  display: none;
+}
+
+.axiom-body.open { display: block; }
+
+.question-block {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.question-block:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.question-text {
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  line-height: 1.55;
+  margin-bottom: 0.9rem;
+}
+
+.question-context {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-bottom: 0.9rem;
+  margin-top: -0.5rem;
+}
+
+/* Response buttons */
+.response-options {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.resp-btn {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--border-bright);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+}
+
+.resp-btn:hover {
+  border-color: var(--green-bright);
+  color: var(--green-bright);
+}
+
+.resp-btn.selected-yes {
+  background: var(--green-dim);
+  border-color: var(--green);
+  color: var(--green-bright);
+}
+
+.resp-btn.selected-partial {
+  background: #2a2010;
+  border-color: var(--amber);
+  color: var(--amber-bright);
+}
+
+.resp-btn.selected-no {
+  background: var(--red-dim);
+  border-color: var(--red);
+  color: var(--red-bright);
+}
+
+/* ── DRIFT BAR ── */
+.drift-bar-container {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.drift-bar-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.drift-bar-label span {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+.drift-track {
+  height: 4px;
+  background: var(--border);
+  position: relative;
+}
+
+.drift-fill {
+  height: 100%;
+  background: var(--green);
+  transition: width 0.4s ease, background 0.4s ease;
+  position: relative;
+}
+
+.threshold-marker {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: 12px;
+  background: var(--amber-bright);
+}
+
+/* ── GATE RESULT ── */
+#gate-result {
+  display: none;
+  margin: 3rem 0;
+  border: 2px solid var(--border);
+  padding: 2rem;
+  background: var(--surface2);
+}
+
+#gate-result.pass { border-color: var(--green); }
+#gate-result.fail { border-color: var(--red); }
+
+.gate-verdict {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.gate-verdict.pass { color: var(--green-bright); }
+.gate-verdict.fail { color: var(--red-bright); }
+
+.gate-verdict-sub {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  margin-bottom: 1.5rem;
+}
+
+.axiom-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.axiom-summary-item {
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  background: var(--surface);
+}
+
+.asi-name {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+
+.asi-score {
+  font-family: var(--mono);
+  font-size: 1rem;
+}
+
+.asi-score.pass { color: var(--green-bright); }
+.asi-score.fail { color: var(--red-bright); }
+.asi-score.warn { color: var(--amber-bright); }
+
+.asi-d {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--text-dim);
+}
+
+.gate-narrative {
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+  border-top: 1px solid var(--border);
+  padding-top: 1.25rem;
+}
+
+/* ── ACTIONS ── */
+.action-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.4rem;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.btn-primary {
+  border-color: var(--green);
+  color: var(--green-bright);
+}
+
+.btn-primary:hover {
+  background: var(--green-dim);
+}
+
+.btn-secondary {
+  border-color: var(--border-bright);
+  color: var(--text-dim);
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-dim);
+  color: var(--text-mid);
+}
+
+/* ── REJECTION FLAGS ── */
+.rejection-flags {
+  margin-top: 1.5rem;
+}
+
+.rejection-flag {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.75rem;
+  border: 1px solid var(--red-dim);
+  background: var(--red-dim);
+  margin-bottom: 0.5rem;
+}
+
+.rf-icon {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--red-bright);
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.rf-text {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+
+.rf-text strong {
+  color: var(--red-bright);
+  font-weight: 500;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.footer-l, .footer-r {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+/* ── COMPLETE BANNER ── */
+.complete-banner {
+  display: none;
+  background: var(--green-dim);
+  border: 1px solid var(--green);
+  padding: 0.6rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: var(--green-bright);
+  margin-bottom: 1rem;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <div class="inst-label">Condition Preservation Theory · Gate Instrument v0.1</div>
+      <h1>CPT <em>Gate</em><br>Instrument</h1>
+      <p class="header-desc">Structural admissibility diagnostic. Observable indicators derive s<sub>i</sub> state values — no direct self-scoring. If any axiom breaches threshold τ<sub>i</sub>, system is non-admissible under CPT.</p>
+    </div>
+    <div class="header-right">
+      <div class="gate-status" id="header-gate-status">AWAITING INPUT</div>
+      <div style="font-family: var(--mono); font-size: 0.55rem; color: var(--text-dim); margin-top: 0.25rem;">8 axioms · 6 rejection conditions</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- STICKY PROGRESS -->
+
+  <div class="progress-track">
+    <span class="progress-label">AXIOM PROGRESS</span>
+    <div class="progress-dots" id="progress-dots"></div>
+    <span class="progress-label" id="progress-fraction" style="margin-left: auto;">0 / 8</span>
+  </div>
+
+  <!-- STEP 1: SYSTEM DEFINITION -->
+
+  <div class="section-intro-block" style="margin-top: 2.5rem;">
+    <h2>Step 1 — System Definition</h2>
+    <p>Identify the system under evaluation. Specificity improves diagnostic accuracy. Vague definitions produce unreliable s<sub>i</sub> readings.</p>
+  </div>
+
+  <div class="system-def">
+    <div class="field-group">
+      <label class="field-label" for="sys-name">System name or identifier</label>
+      <input class="field-input" id="sys-name" type="text" placeholder="e.g. Municipal waste management authority, Regional health trust, Platform cooperative"/>
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="sys-purpose">Declared purpose</label>
+      <textarea class="field-input" id="sys-purpose" placeholder="What does the system claim to do? State this in its own terms."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="sys-domain">Domain</label>
+      <input class="field-input" id="sys-domain" type="text" placeholder="e.g. Public health, Housing, Energy, Finance, Governance"/>
+    </div>
+    <div style="margin-top: 0.5rem;">
+      <button class="btn btn-primary" onclick="beginDiagnostic()">Begin Axiom Diagnostic →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: AXIOM MODULES -->
+
+  <div class="section-intro-block" id="axiom-section-header" style="display:none;">
+    <h2>Step 2 — Axiom Diagnostic Modules</h2>
+    <p>Answer each question based on observable, structural evidence about the system — not your opinion of it. The instrument computes s<sub>i</sub> from your responses.</p>
+  </div>
+
+  <div id="axiom-modules"></div>
+
+  <!-- STEP 3: GATE RESULT -->
+
+  <div id="gate-result">
+    <div id="gate-verdict-text" class="gate-verdict"></div>
+    <div id="gate-verdict-sub" class="gate-verdict-sub"></div>
+    <div class="axiom-summary-grid" id="axiom-summary-grid"></div>
+    <div id="rejection-flags-container" class="rejection-flags"></div>
+    <div class="gate-narrative" id="gate-narrative"></div>
+    <div class="action-row">
+      <button class="btn btn-secondary" onclick="resetInstrument()">Reset & Re-evaluate</button>
+      <button class="btn btn-primary" onclick="window.print()">Export Report</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span class="footer-l">CPT GATE INSTRUMENT · PHASE 2 BEHAVIORAL SIMULATOR</span>
+  <span class="footer-r">Field &amp; Signal · Condition Preservation Theory</span>
+</footer>
+
+<script>
+// ── AXIOM DEFINITIONS ──
+const AXIOMS = [
+  {
+    id: 1,
+    name: "Regeneration as Hard Constraint",
+    sub: "Axiom 01 · τ₁ = 0.35",
+    tau: 0.35,
+    rejectionLabel: "Unbounded Cost Displacement",
+    questions: [
+      {
+        text: "Are the primary inputs this system depends on (materials, labor, attention, ecological conditions) being replenished at a rate equal to or greater than consumption?",
+        context: "Consider the full input chain, not just immediate operational inputs.",
+        options: ["Yes", "Partially", "No", "Unknown"]
+      },
+      {
+        text: "Does the system have a mechanism that triggers intervention when input depletion rates exceed recovery rates?",
+        context: "A mechanism that exists on paper but isn't enforced scores as Partial.",
+        options: ["Yes", "Partial", "No"]
+      },
+      {
+        text: "Can the system continue operating in its current form for the next 20 years without fundamentally depleting the conditions it depends on?",
+        context: "This is a structural projection question, not an aspiration question.",
+        options: ["Yes", "Uncertain", "No"]
+      },
+      {
+        text: "Are depletion rates for core inputs measured and reported within the system's own accountability structure?",
+        options: ["Yes, regularly", "Occasionally", "No"]
+      }
+    ]
+  },
+  {
+    id: 2,
+    name: "Externalities Internalized",
+    sub: "Axiom 02 · τ₂ = 0.40",
+    tau: 0.40,
+    rejectionLabel: "Non-Observable Dependency Structure",
+    questions: [
+      {
+        text: "Are negative outcomes of system operation — environmental damage, labor strain, community disruption — tracked within the same accounting structure that measures system benefits?",
+        context: "If benefits are tracked in one system and harms in another (or not at all), score No.",
+        options: ["Yes", "Partially", "No"]
+      },
+      {
+        text: "When harm occurs, is it formally attributed to the system that produced it?",
+        context: "Attribution means the cost is assigned, not just acknowledged.",
+        options: ["Yes", "Sometimes", "No", "Not applicable"]
+      },
+      {
+        text: "Do externalized costs feed back into decision-making about system operation?",
+        context: "Check whether harm data changes how decisions are made, not just whether it is collected.",
+        options: ["Yes", "Partially", "No"]
+      },
+      {
+        text: "Are there populations or ecosystems that bear costs from this system but have no representation in its governance structure?",
+        options: ["No (all affected parties represented)", "Some gaps", "Yes, significantly"]
+      }
+    ]
+  },
+  {
+    id: 3,
+    name: "Signal Integrity",
+    sub: "Axiom 03 · τ₃ = 0.30",
+    tau: 0.30,
+    rejectionLabel: "Feedback Suppression or Distortion",
+    questions: [
+      {
+        text: "When negative outcomes occur, are they recorded in the same system that receives rewards for positive outcomes?",
+        options: ["Yes", "Partially", "No"]
+      },
+      {
+        text: "Can operators suppress, delay, or selectively report failure data without formal consequence?",
+        options: ["No", "In some conditions", "Yes"]
+      },
+      {
+        text: "Are the metrics used to evaluate success independently auditable by parties with no stake in the outcome?",
+        options: ["Yes", "Partially", "No"]
+      },
+      {
+        text: "Does the system reward accurate reporting of failure as much as it rewards positive performance?",
+        context: "Look at incentive structures, not stated values.",
+        options: ["Yes", "Neutral", "No — success is rewarded, failure is penalized"]
+      },
+      {
+        text: "Is there a structural mechanism by which people inside the system can raise concerns about its effects without career or operational risk?",
+        options: ["Yes, protected", "Informally tolerated", "No"]
+      }
+    ]
+  },
+  {
+    id: 4,
+    name: "Throughput Within Adaptive Capacity",
+    sub: "Axiom 04 · τ₄ = 0.35",
+    tau: 0.35,
+    rejectionLabel: "Throughput Exceeds Adaptive Capacity at Baseline",
+    questions: [
+      {
+        text: "Is the system's current operational load within the range it was designed to handle coherently?",
+        context: "Not maximum capacity — coherent handling. Signs of incoherence: decisions made without full information, errors attributed to volume rather than error.",
+        options: ["Yes", "At the edge", "No — operating beyond coherent range"]
+      },
+      {
+        text: "When the system scales (grows, adds users, expands mandate), does it have formal mechanisms for checking whether adaptive capacity keeps pace?",
+        options: ["Yes", "Ad hoc", "No"]
+      },
+      {
+        text: "Has the system experienced breakdown, error cascades, or coordination failures in the past 2 years attributable to scale rather than isolated incident?",
+        options: ["No", "Isolated incidents", "Yes, repeatedly"]
+      },
+      {
+        text: "Is decision velocity (how fast decisions must be made) matched by the system's ability to gather and process the information required to make them well?",
+        options: ["Yes", "Sometimes mismatched", "Chronic mismatch"]
+      }
+    ]
+  },
+  {
+    id: 5,
+    name: "Power Revisability",
+    sub: "Axiom 05 · τ₅ = 0.40",
+    tau: 0.40,
+    rejectionLabel: "Irreversible Power Asymmetry",
+    questions: [
+      {
+        text: "Can decision-making authority within the system be formally challenged by those affected by its decisions?",
+        context: "Not in theory — in practice. Has it happened? Is there a mechanism that has actually worked?",
+        options: ["Yes, with examples", "In theory only", "No"]
+      },
+      {
+        text: "Are there documented cases of power being successfully redistributed or revised in response to demonstrated capture or failure?",
+        options: ["Yes", "No documented cases", "No mechanism exists"]
+      },
+      {
+        text: "Can external parties detect when the system's decision-making has been captured by a sub-interest?",
+        options: ["Yes, through auditable records", "Difficult but possible", "No — not observable externally"]
+      },
+      {
+        text: "Is there any configuration of events under which control of this system cannot be transferred, removed, or revised?",
+        context: "If yes, that configuration represents a permanent power lock.",
+        options: ["No such configuration exists", "Theoretically possible but unlikely", "Yes — there are lock-in conditions"]
+      }
+    ]
+  },
+  {
+    id: 6,
+    name: "Participation Non-Degrading",
+    sub: "Axiom 06 · τ₆ = 0.35",
+    tau: 0.35,
+    rejectionLabel: "Dependency Violation",
+    questions: [
+      {
+        text: "After extended participation in this system (as worker, user, or citizen), do participants generally leave with more capacity — skills, resources, awareness — than they entered with?",
+        context: "Consider the modal participant, not exceptional cases.",
+        options: ["Yes", "Neutral / mixed", "No — participation is net-depleting"]
+      },
+      {
+        text: "Does the system explicitly measure or track what participation costs its participants, in addition to what they produce?",
+        options: ["Yes", "Partially", "No"]
+      },
+      {
+        text: "Are there populations for whom participation in this system is de facto mandatory — and for whom it is systematically depleting?",
+        context: "Mandatory + depleting is the clearest participation violation.",
+        options: ["No", "Some populations", "Yes — significant mandatory-depleting participation"]
+      },
+      {
+        text: "Does the system have a mechanism for participants to exit without disproportionate cost?",
+        options: ["Yes, accessible exit", "Difficult but possible", "No — exit is effectively foreclosed"]
+      }
+    ]
+  },
+  {
+    id: 7,
+    name: "Value-Reality Alignment",
+    sub: "Axiom 07 · τ₇ = 0.35",
+    tau: 0.35,
+    rejectionLabel: "Unbounded Cost Displacement (Value layer)",
+    questions: [
+      {
+        text: "Do the system's internal success metrics correspond to real-world outcomes for the populations and environments it affects?",
+        context: "Misalignment example: profit as success metric where ecological degradation is the actual outcome.",
+        options: ["Yes, tightly aligned", "Partially aligned", "No — internal metrics diverge from actual effects"]
+      },
+      {
+        text: "Is there a formal accounting process that converts internal performance measures into broader real-world impact measures?",
+        options: ["Yes", "Informal / partial", "No"]
+      },
+      {
+        text: "Have internal success metrics driven decisions that produced real-world harm that the metrics did not capture?",
+        context: "This is a historical track record question.",
+        options: ["No documented cases", "Possibly, unclear", "Yes — documented cases"]
+      },
+      {
+        text: "Does the system reward behaviors that generate internal metric performance at the expense of the broader conditions it depends on?",
+        options: ["No", "In some cases", "Yes — systematically"]
+      }
+    ]
+  },
+  {
+    id: 8,
+    name: "Early Collapse Signal Legibility",
+    sub: "Axiom 08 · τ₈ = 0.30",
+    tau: 0.30,
+    rejectionLabel: "Collapse Signal Illegibility",
+    questions: [
+      {
+        text: "Are early-stage degradation signals (not just crisis-level failures) visible within the system's monitoring infrastructure?",
+        context: "If the first signal is a crisis, early warning is absent.",
+        options: ["Yes", "Partially", "No — only crisis-level signals are tracked"]
+      },
+      {
+        text: "When early warnings are generated, are they actionable — do they trigger decisions before conditions become critical?",
+        options: ["Yes", "Sometimes", "No — warnings are generated but not acted on"]
+      },
+      {
+        text: "Is there a documented history of the system successfully responding to early degradation signals before they became crises?",
+        options: ["Yes", "Unclear record", "No — responses are typically reactive"]
+      },
+      {
+        text: "Can individuals inside the system act on early collapse signals without waiting for formal authorization from the level that might be producing them?",
+        context: "If the signal is that leadership is failing, can anyone below leadership act on that?",
+        options: ["Yes", "Partially", "No — action requires authorization from potential source of failure"]
+      }
+    ]
+  }
+];
+
+// ── STATE ──
+let responses = {}; // axiomId -> questionIdx -> value (0-1)
+let axiomScores = {}; // axiomId -> s_i
+let completedAxioms = new Set();
+let diagnosticStarted = false;
+
+// ── SCORING MAP ──
+function responseToScore(options, selectedIdx) {
+  const n = options.length;
+  if (n === 2) return selectedIdx === 0 ? 1.0 : 0.0;
+  if (n === 3) return [1.0, 0.5, 0.0][selectedIdx] ?? 0.5;
+  if (n === 4) return [1.0, 0.65, 0.15, 0.4][selectedIdx] ?? 0.5;
+  return 0.5;
+}
+
+// Some questions are inverted (bad answer = index 0)
+const INVERTED_QUESTIONS = {
+  '2-3': true, // "are there populations bearing cost with no representation" - No is good
+  '3-1': true, // "can operators suppress" - No is good
+  '5-3': true, // "is there lock-in config" - No is good
+  '6-2': true, // "mandatory depleting participation" - No is good
+  '7-2': true, // "have metrics driven harm" - No is good
+  '7-3': true, // "does system reward metric gaming" - No is good
+};
+
+function getQuestionScore(axiomId, qIdx, optionIdx, options) {
+  const key = `${axiomId}-${qIdx}`;
+  let score = responseToScore(options, optionIdx);
+  if (INVERTED_QUESTIONS[key]) score = 1.0 - score;
+  return score;
+}
+
+function computeAxiomScore(axiomId) {
+  const ax = AXIOMS.find(a => a.id === axiomId);
+  const qResponses = responses[axiomId] || {};
+  const qCount = ax.questions.length;
+  let answered = 0, total = 0;
+  for (let i = 0; i < qCount; i++) {
+    if (qResponses[i] !== undefined) {
+      total += qResponses[i];
+      answered++;
+    }
+  }
+  if (answered === 0) return null;
+  return total / answered;
+}
+
+function scoreColor(s) {
+  if (s >= 0.65) return 'good';
+  if (s >= 0.40) return 'warn';
+  return 'bad';
+}
+
+// ── BUILD UI ──
+function buildProgressDots() {
+  const container = document.getElementById('progress-dots');
+  container.innerHTML = '';
+  AXIOMS.forEach((ax, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.id = `dot-${ax.id}`;
+    dot.title = ax.name;
+    dot.onclick = () => {
+      const mod = document.getElementById(`axiom-mod-${ax.id}`);
+      if (mod) mod.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    container.appendChild(dot);
+  });
+}
+
+function buildAxiomModules() {
+  const container = document.getElementById('axiom-modules');
+  container.innerHTML = '';
+  AXIOMS.forEach((ax, idx) => {
+    const mod = document.createElement('div');
+    mod.className = 'axiom-module';
+    mod.id = `axiom-mod-${ax.id}`;
+    if (idx === 0) mod.classList.add('unlocked', 'active-module');
+
+    mod.innerHTML = `
+      <div class="axiom-header" onclick="toggleAxiom(${ax.id})">
+        <div class="axiom-num-badge">A-0${ax.id}</div>
+        <div class="axiom-title-text">
+          <div class="axiom-name">${ax.name}</div>
+          <div class="axiom-sub">${ax.sub}</div>
+        </div>
+        <div class="axiom-score-display">
+          <div class="s-value" id="s-val-${ax.id}">—</div>
+          <div class="d-value" id="d-val-${ax.id}">D = —</div>
+        </div>
+      </div>
+      <div class="axiom-body ${idx === 0 ? 'open' : ''}" id="axiom-body-${ax.id}">
+        ${ax.questions.map((q, qi) => buildQuestion(ax.id, qi, q)).join('')}
+        <div class="drift-bar-container">
+          <div class="drift-bar-label">
+            <span>0 — Non-admissible</span>
+            <span>τ = ${ax.tau}</span>
+            <span>1.0 — Stable</span>
+          </div>
+          <div class="drift-track">
+            <div class="drift-fill" id="drift-fill-${ax.id}" style="width:0%"></div>
+            <div class="threshold-marker" style="left: ${ax.tau * 100}%"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(mod);
+  });
+}
+
+function buildQuestion(axiomId, qi, q) {
+  const opts = q.options.map((opt, oi) => 
+    `<button class="resp-btn" id="resp-${axiomId}-${qi}-${oi}" onclick="selectResponse(${axiomId}, ${qi}, ${oi}, '${opt.toLowerCase().replace(/[^a-z]/g,'')}')">${opt}</button>`
+  ).join('');
+
+  return `
+    <div class="question-block" id="qblock-${axiomId}-${qi}">
+      <div class="question-text">${q.text}</div>
+      ${q.context ? `<div class="question-context">${q.context}</div>` : ''}
+      <div class="response-options">${opts}</div>
+    </div>
+  `;
+}
+
+function selectResponse(axiomId, qi, optionIdx, optStr) {
+  const ax = AXIOMS.find(a => a.id === axiomId);
+  const q = ax.questions[qi];
+
+  // Clear previous selection in this question
+  q.options.forEach((_, oi) => {
+    const btn = document.getElementById(`resp-${axiomId}-${qi}-${oi}`);
+    if (btn) btn.className = 'resp-btn';
+  });
+
+  // Mark selected
+  const selected = document.getElementById(`resp-${axiomId}-${qi}-${optionIdx}`);
+  if (selected) {
+    const firstWord = optStr.substring(0, 2);
+    let cls = 'selected-partial';
+    if (['ye', 'no'].includes(firstWord)) {
+      // Determine if this is a good or bad answer
+      const score = getQuestionScore(axiomId, qi, optionIdx, q.options);
+      cls = score >= 0.7 ? 'selected-yes' : score <= 0.3 ? 'selected-no' : 'selected-partial';
+    }
+    selected.classList.add(cls);
+  }
+
+  if (!responses[axiomId]) responses[axiomId] = {};
+  responses[axiomId][qi] = getQuestionScore(axiomId, qi, optionIdx, q.options);
+
+  updateAxiomDisplay(axiomId);
+  checkAxiomComplete(axiomId);
+}
+
+function updateAxiomDisplay(axiomId) {
+  const ax = AXIOMS.find(a => a.id === axiomId);
+  const s = computeAxiomScore(axiomId);
+  if (s === null) return;
+
+  const D = s - ax.tau;
+  const sVal = document.getElementById(`s-val-${axiomId}`);
+  const dVal = document.getElementById(`d-val-${axiomId}`);
+  const dFill = document.getElementById(`drift-fill-${axiomId}`);
+
+  if (sVal) {
+    sVal.textContent = s.toFixed(2);
+    sVal.className = 's-value ' + scoreColor(s);
+  }
+  if (dVal) {
+    dVal.textContent = `D = ${D >= 0 ? '+' : ''}${D.toFixed(2)}`;
+    dVal.className = 'd-value ' + (D >= 0 ? 'pass' : 'fail');
+  }
+  if (dFill) {
+    dFill.style.width = (s * 100) + '%';
+    dFill.style.background = s < ax.tau ? 'var(--red-bright)' : s < 0.6 ? 'var(--amber-bright)' : 'var(--green)';
+  }
+
+  axiomScores[axiomId] = s;
+}
+
+function checkAxiomComplete(axiomId) {
+  const ax = AXIOMS.find(a => a.id === axiomId);
+  const qResponses = responses[axiomId] || {};
+  const answered = Object.keys(qResponses).length;
+  if (answered >= ax.questions.length) {
+    completedAxioms.add(axiomId);
+    updateDot(axiomId);
+    updateProgress();
+
+    const mod = document.getElementById(`axiom-mod-${axiomId}`);
+    const s = axiomScores[axiomId] ?? 0;
+    if (mod) {
+      mod.classList.remove('active-module');
+      mod.classList.add(s < ax.tau ? 'complete-fail' : 'complete-pass');
+    }
+
+    // Unlock next
+    const idx = AXIOMS.findIndex(a => a.id === axiomId);
+    if (idx < AXIOMS.length - 1) {
+      const nextMod = document.getElementById(`axiom-mod-${AXIOMS[idx+1].id}`);
+      if (nextMod) {
+        nextMod.classList.add('unlocked', 'active-module');
+        setTimeout(() => nextMod.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+      }
+    }
+
+    if (completedAxioms.size === AXIOMS.length) {
+      showGateResult();
+    }
+  }
+}
+
+function updateDot(axiomId) {
+  const ax = AXIOMS.find(a => a.id === axiomId);
+  const dot = document.getElementById(`dot-${axiomId}`);
+  if (!dot) return;
+  const s = axiomScores[axiomId] ?? 0;
+  dot.className = 'dot ' + (s < ax.tau ? 'failed' : 'complete');
+}
+
+function updateProgress() {
+  const frac = document.getElementById('progress-fraction');
+  if (frac) frac.textContent = `${completedAxioms.size} / 8`;
+}
+
+function toggleAxiom(axiomId) {
+  const body = document.getElementById(`axiom-body-${axiomId}`);
+  if (body) body.classList.toggle('open');
+}
+
+// ── GATE RESULT ──
+function showGateResult() {
+  const failures = AXIOMS.filter(ax => (axiomScores[ax.id] ?? 0) < ax.tau);
+  const pass = failures.length === 0;
+
+  const gateEl = document.getElementById('gate-result');
+  const verdict = document.getElementById('gate-verdict-text');
+  const verdictSub = document.getElementById('gate-verdict-sub');
+  const summaryGrid = document.getElementById('axiom-summary-grid');
+  const flagContainer = document.getElementById('rejection-flags-container');
+  const narrative = document.getElementById('gate-narrative');
+  const statusEl = document.getElementById('header-gate-status');
+
+  gateEl.style.display = 'block';
+  gateEl.className = pass ? 'pass' : 'fail';
+
+  verdict.className = 'gate-verdict ' + (pass ? 'pass' : 'fail');
+  verdict.textContent = pass ? 'System Admissible Under CPT' : 'System Non-Admissible Under CPT';
+
+  verdictSub.textContent = pass
+    ? 'All axioms above threshold. F&S drift analysis may proceed.'
+    : `${failures.length} rejection condition${failures.length > 1 ? 's' : ''} triggered. CPT gate closed. Analysis cannot proceed.`;
+
+  statusEl.textContent = pass ? 'ADMISSIBLE' : 'NON-ADMISSIBLE';
+  statusEl.className = 'gate-status ' + (pass ? 'pass' : 'fail');
+
+  // Summary grid
+  summaryGrid.innerHTML = AXIOMS.map(ax => {
+    const s = axiomScores[ax.id] ?? 0;
+    const D = s - ax.tau;
+    const cls = s < ax.tau ? 'fail' : s < 0.6 ? 'warn' : 'pass';
+    return `
+      <div class="axiom-summary-item">
+        <div class="asi-name">A-0${ax.id} · ${ax.name.split(' ').slice(0,3).join(' ')}</div>
+        <div class="asi-score ${cls}">s = ${s.toFixed(2)}</div>
+        <div class="asi-d">D = ${D >= 0 ? '+' : ''}${D.toFixed(2)} · τ = ${ax.tau}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Rejection flags
+  if (failures.length > 0) {
+    flagContainer.innerHTML = '<div style="font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; color: var(--red-bright); margin-bottom: 0.75rem;">REJECTION CONDITIONS TRIGGERED</div>' +
+      failures.map(ax => `
+        <div class="rejection-flag">
+          <div class="rf-icon">▶ FAIL</div>
+          <div class="rf-text"><strong>${ax.rejectionLabel}</strong> — Axiom ${ax.id}: ${ax.name}. s<sub>${ax.id}</sub> = ${(axiomScores[ax.id]??0).toFixed(2)}, τ = ${ax.tau}, D = ${((axiomScores[ax.id]??0) - ax.tau).toFixed(2)}.</div>
+        </div>
+      `).join('');
+  }
+
+  // Narrative
+  const sysName = document.getElementById('sys-name').value || 'the evaluated system';
+  const weakest = AXIOMS.reduce((min, ax) => (axiomScores[ax.id] ?? 0) < (axiomScores[min.id] ?? 1) ? ax : min);
+  const strongest = AXIOMS.reduce((max, ax) => (axiomScores[ax.id] ?? 0) > (axiomScores[max.id] ?? 0) ? ax : max);
+
+  if (pass) {
+    const avgS = Object.values(axiomScores).reduce((a,b) => a+b, 0) / 8;
+    const atRisk = AXIOMS.filter(ax => (axiomScores[ax.id] ?? 0) < ax.tau + 0.15);
+    narrative.innerHTML = `
+      <strong>${sysName}</strong> is structurally admissible under CPT. Mean s̄ = ${avgS.toFixed(2)}. 
+      Strongest axis: <em>${strongest.name}</em> (s = ${(axiomScores[strongest.id]??0).toFixed(2)}). 
+      ${atRisk.length > 0 
+        ? `<br><br>Axes approaching threshold (within 0.15 of τ): <em>${atRisk.map(a => a.name).join(', ')}</em>. F&S drift monitoring recommended. These represent early-stage vulnerability, not current failure.`
+        : 'All axes demonstrate adequate distance from threshold boundaries. System is stable under current conditions. Continued F&S monitoring advised.'
+      }
+    `;
+  } else {
+    narrative.innerHTML = `
+      <strong>${sysName}</strong> is non-admissible under CPT. Gate is closed. The identified rejection conditions represent structural impossibilities under condition preservation logic — not design weaknesses to be optimized, but fundamental architectural violations. 
+      <br><br>
+      Non-admissibility does not imply moral judgment. It means the system, as currently constituted, cannot sustain the conditions it depends on without displacing degradation across hidden boundaries. Intervention must be structural, not incremental.
+      <br><br>
+      <em>Strongest surviving axis: ${strongest.name} (s = ${(axiomScores[strongest.id]??0).toFixed(2)}). This represents the most viable foundation for any rebuild or parallel-system design effort.</em>
+    `;
+  }
+
+  gateEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── INIT ──
+function beginDiagnostic() {
+  const name = document.getElementById('sys-name').value.trim();
+  if (!name) {
+    document.getElementById('sys-name').focus();
+    document.getElementById('sys-name').style.borderColor = 'var(--amber)';
+    return;
+  }
+  diagnosticStarted = true;
+  document.getElementById('axiom-section-header').style.display = 'block';
+  buildAxiomModules();
+  updateProgress();
+  document.getElementById('axiom-modules').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetInstrument() {
+  responses = {};
+  axiomScores = {};
+  completedAxioms = new Set();
+  diagnosticStarted = false;
+  document.getElementById('sys-name').value = '';
+  document.getElementById('sys-purpose').value = '';
+  document.getElementById('sys-domain').value = '';
+  document.getElementById('sys-name').style.borderColor = '';
+  document.getElementById('axiom-section-header').style.display = 'none';
+  document.getElementById('axiom-modules').innerHTML = '';
+  document.getElementById('gate-result').style.display = 'none';
+  document.getElementById('header-gate-status').textContent = 'AWAITING INPUT';
+  document.getElementById('header-gate-status').className = 'gate-status';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Build initial progress dots
+buildProgressDots();
+</script>
+
+</body>
+</html>
