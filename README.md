@@ -59,6 +59,7 @@ This is not a recommendation. It is a structural requirement.
 - **Integrity:** Structural recognition must precede narrative explanation.
 
 -----
+<img src="diagrams/cpt-stack.svg" alt="CPT Stack Diagram" width="600"/>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 520" width="600" height="520" font-family="Georgia, serif">
 
   <!-- Background -->
@@ -118,7 +119,6 @@ This is not a recommendation. It is a structural requirement.
   <text x="578" y="290" font-size="10" fill="#111111" text-anchor="middle" transform="rotate(90 578 290)" letter-spacing="1">DETECTION</text>
 
 </svg>
-
 
 
 
