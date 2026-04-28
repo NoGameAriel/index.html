@@ -2,655 +2,954 @@
 
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Field & Signal — Diagnostic Framework for Institutional Repair</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@300;400;500&family=Lora:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      /* backgrounds — true dark, enough separation between layers */
-      --bg:          #161410;
-      --bg-2:        #1e1c18;
-      --bg-3:        #252320;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Field & Signal — Diagnostic Framework for Institutional Repair</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f9f8f5;
+    --bg-2: #f2f1ed;
+    --white: #ffffff;
+    --ink: #1c1c18;
+    --ink-2: #3a3a34;
+    --ink-mid: #5a5a52;
+    --ink-light: #8a8a80;
+    --ink-faint: #b4b4a8;
+    --border: #e4e2d8;
+    --border-strong: #c8c6ba;
+    --warm: #b86840;
+    --warm-bg: #fdf3ec;
+    --warm-border: #ecc8a8;
+    --green: #3a6e4a;
+    --green-bg: #eef5f0;
+    --red: #8a3028;
+    --red-bg: #faeeec;
+    --serif: 'Lora', serif;
+    --sans: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
 
-```
-  /* borders */
-  --rule:        #302e28;
-  --rule-light:  #3e3b34;
-
-  /* text — ALL values must be legible on dark backgrounds */
-  --ink:         #f5f0e8;   /* headings, primary */
-  --ink-2:       #e8e3da;   /* body copy, card text — previously too dim */
-  --ink-mid:     #d0cbc2;   /* secondary labels, captions */
-  --ink-sub:     #b8b3aa;   /* only for truly decorative / non-essential chrome */
-
-  /* accent palette */
-  --accent:      #6db8d4;
-  --accent-dim:  #1e4a5c;
-  --signal:      #4e9bb5;
-  --signal-dim:  #1a3a48;
-  --red:         #b86050;
-  --red-dim:     #3a1a14;
-  --green:       #5a9068;
-
-  --mono:   'IBM Plex Mono', monospace;
-  --body:   'Lora', Georgia, serif;
-  --display:'Playfair Display', Georgia, serif;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html { scroll-behavior: smooth; }
 
-html, body, .entry, .recognition, .structure, .demonstration, .action, .closing {
-  background-color: #161410;
-}
-
 body {
-  background: #161410;
-  color: #e8e3da;
-  font-family: var(--body);
-  font-size: 16.5px;
-  line-height: 1.78;
-  overflow-x: hidden;
+background: var(–bg);
+color: var(–ink);
+font-family: var(–sans);
+font-size: 16px;
+line-height: 1.65;
+-webkit-font-smoothing: antialiased;
+overflow-x: hidden;
 }
 
-/* grain overlay */
-body::before {
-  content: ''; position: fixed; inset: 0;
-  pointer-events: none; z-index: 999; opacity: 0.022;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px;
-}
-
-/* ── NAV ── */
+/* NAV */
 nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0.9rem 2.5rem;
-  border-bottom: 1px solid var(--rule);
-  background: rgba(8,11,16,0.95);
-  backdrop-filter: blur(16px);
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 100;
+background: rgba(249,248,245,0.94);
+backdrop-filter: blur(10px);
+border-bottom: 1px solid var(–border);
+height: 54px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 24px;
 }
+
 .nav-mark {
-  font-family: var(--mono); font-size: 0.75rem;
-  letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--accent); text-decoration: none;
+font-family: var(–serif);
+font-size: 15px;
+font-weight: 500;
+color: var(–ink);
+text-decoration: none;
+letter-spacing: -0.01em;
 }
-.nav-links { display: flex; gap: 1.8rem; list-style: none; }
+
+.nav-links {
+display: flex;
+gap: 20px;
+align-items: center;
+list-style: none;
+}
+
 .nav-links a {
-  font-family: var(--mono); font-size: 0.72rem;
-  letter-spacing: 0.07em; text-transform: uppercase;
-  color: var(--ink-mid); text-decoration: none;
-  padding: 0.4rem 0; transition: color 0.2s;
+font-family: var(–sans);
+font-size: 13px;
+color: var(–ink-light);
+text-decoration: none;
+transition: color 0.15s;
 }
-.nav-links a:hover { color: var(--ink); }
-.nav-status {
-  font-family: var(--mono); font-size: 0.62rem;
-  letter-spacing: 0.1em; color: var(--ink-mid);
-  display: flex; align-items: center; gap: 0.5rem;
-}
-.nav-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--green); animation: pulse 3s ease-in-out infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
 
-/* ── LAYOUT ── */
-.wrap { max-width: 1080px; margin: 0 auto; padding: 0 2.5rem; }
+.nav-links a:hover { color: var(–ink); }
 
-/* ── REVEAL ── */
+.nav-cta {
+color: var(–ink) !important;
+border: 1px solid var(–border-strong);
+padding: 6px 14px;
+border-radius: 4px;
+font-weight: 500 !important;
+transition: all 0.15s !important;
+}
+
+.nav-cta:hover {
+background: var(–ink) !important;
+color: var(–white) !important;
+border-color: var(–ink) !important;
+}
+
+@media (max-width: 600px) {
+.nav-links .hide-mobile { display: none; }
+}
+
+/* WRAP */
+.wrap {
+max-width: 720px;
+margin: 0 auto;
+padding: 0 24px;
+}
+
+/* REVEAL */
 .reveal {
-  opacity: 0; transform: translateY(14px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
+opacity: 0;
+transform: translateY(14px);
+transition: opacity 0.55s ease, transform 0.55s ease;
 }
 .reveal.in { opacity: 1; transform: none; }
 
 @keyframes fadeUp {
-  from { opacity:0; transform:translateY(12px); }
-  to   { opacity:1; transform:none; }
+from { opacity: 0; transform: translateY(12px); }
+to { opacity: 1; transform: none; }
 }
 
-/* ── BUTTONS ── */
-.btn {
-  font-family: var(--mono); font-size: 0.72rem;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  text-decoration: none; padding: 0.8rem 1.6rem;
-  border: 1px solid; transition: all 0.2s;
-  display: inline-flex; align-items: center; gap: 0.5rem;
+/* SECTION SHARED */
+.section-label {
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–ink-faint);
+margin-bottom: 6px;
+display: flex;
+align-items: center;
+gap: 10px;
 }
-.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 500; }
-.btn-primary:hover { background: transparent; color: var(--accent); }
-.btn-ghost { background: transparent; border-color: var(--rule-light); color: var(--ink-mid); }
-.btn-ghost:hover { border-color: var(--ink-mid); color: var(--ink); }
-
-/* ── SHARED SECTION HEADERS ── */
-.sec-label {
-  font-family: var(--mono); font-size: 0.65rem;
-  letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--ink-mid); margin-bottom: 0.6rem;
-  display: flex; align-items: center; gap: 0.8rem;
-}
-.sec-label::after { content:''; flex:1; height:1px; background:var(--rule-light); }
-.sec-heading {
-  font-family: var(--display);
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  font-weight: 600; line-height: 1.15; color: var(--ink);
-  margin-bottom: 0.9rem;
-}
-.sec-heading em { font-style: italic; color: var(--accent); }
-.sec-sub {
-  font-size: 1rem; color: var(--ink-2);
-  line-height: 1.8; max-width: 560px;
+.section-label::after {
+content: ‘’;
+flex: 1;
+height: 1px;
+background: var(–border);
 }
 
-/* ═══════════════════════════════════════
-   01  ENTRY MOMENT
-═══════════════════════════════════════ */
-.entry {
-  min-height: 100vh;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 9rem 2.5rem 4rem;
-  max-width: 1080px; margin: 0 auto;
-  position: relative; z-index: 1;
+/* ── HERO ── */
+.hero {
+padding: 120px 24px 72px;
+max-width: 720px;
+margin: 0 auto;
 }
 
-.entry-kicker {
-  font-family: var(--mono); font-size: 0.65rem;
-  letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--ink-mid); margin-bottom: 2.5rem;
-  display: flex; align-items: center; gap: 1rem;
-  animation: fadeUp 0.8s ease both;
-}
-.entry-kicker::before { content:''; width:24px; height:1px; background: var(--ink-mid); }
-
-.entry-question {
-  font-family: var(--display);
-  font-size: clamp(2.2rem, 5vw, 4.2rem);
-  font-weight: 700; line-height: 1.08;
-  letter-spacing: -0.02em;
-  color: #f5f0e8; max-width: 780px; margin-bottom: 3rem;
-  animation: fadeUp 0.8s 0.06s ease both;
+.hero-eyebrow {
+font-family: var(–mono);
+font-size: 11px;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: var(–ink-faint);
+margin-bottom: 28px;
+display: flex;
+align-items: center;
+gap: 10px;
+animation: fadeUp 0.7s ease both;
 }
 
-.entry-situations {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 1px; background: var(--rule);
-  border: 1px solid var(--rule);
-  margin-bottom: 3rem;
-  animation: fadeUp 0.8s 0.12s ease both;
+.hero-eyebrow::before {
+content: ‘’;
+width: 20px;
+height: 1px;
+background: var(–ink-faint);
 }
+
+.hero-body {
+font-family: var(–serif);
+font-size: clamp(21px, 4.5vw, 28px);
+line-height: 1.55;
+color: var(–ink);
+font-weight: 400;
+margin-bottom: 32px;
+animation: fadeUp 0.7s 0.07s ease both;
+}
+
+.hero-body em {
+font-style: italic;
+color: var(–ink-mid);
+}
+
+.hero-statement {
+padding-top: 28px;
+border-top: 1px solid var(–border);
+margin-bottom: 10px;
+animation: fadeUp 0.7s 0.14s ease both;
+}
+
+.hero-statement h1 {
+font-family: var(–serif);
+font-size: clamp(17px, 3.5vw, 21px);
+font-weight: 500;
+line-height: 1.5;
+color: var(–ink);
+margin-bottom: 8px;
+}
+
+.hero-sub {
+font-size: 14px;
+color: var(–ink-mid);
+font-weight: 300;
+line-height: 1.7;
+margin-bottom: 32px;
+}
+
+.hero-actions {
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+animation: fadeUp 0.7s 0.21s ease both;
+}
+
+.btn-primary {
+display: inline-block;
+background: var(–ink);
+color: var(–white);
+font-family: var(–sans);
+font-size: 14px;
+font-weight: 500;
+padding: 13px 22px;
+border-radius: 5px;
+text-decoration: none;
+transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.82; }
+
+.btn-secondary {
+display: inline-block;
+background: transparent;
+color: var(–ink-mid);
+font-family: var(–sans);
+font-size: 14px;
+font-weight: 400;
+padding: 13px 22px;
+border-radius: 5px;
+border: 1px solid var(–border-strong);
+text-decoration: none;
+transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(–ink); color: var(–ink); }
+
+/* ── SECTION SPACING ── */
+.section {
+padding: 64px 0;
+border-top: 1px solid var(–border);
+}
+
+/* ── RECOGNITION ── */
+.rec-intro {
+font-family: var(–serif);
+font-size: 15px;
+font-style: italic;
+color: var(–ink-mid);
+line-height: 1.7;
+margin-bottom: 24px;
+max-width: 520px;
+}
+
+.situations {
+display: grid;
+grid-template-columns: 1fr;
+gap: 1px;
+background: var(–border);
+border: 1px solid var(–border);
+border-radius: 6px;
+overflow: hidden;
+margin-bottom: 32px;
+}
+
+@media (min-width: 560px) {
+.situations { grid-template-columns: 1fr 1fr 1fr; }
+}
+
 .situation {
-  background: var(--bg-2); padding: 1.8rem 1.5rem;
-  border-bottom: 2px solid transparent;
-  transition: border-color 0.25s, background 0.2s;
+background: var(–white);
+padding: 20px;
+transition: background 0.15s;
 }
-.situation:hover { background: var(--bg-3); border-bottom-color: var(--accent); }
+
+.situation:hover { background: var(–bg-2); }
 
 .sit-mark {
-  font-family: var(--mono); font-size: 0.6rem;
-  letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--ink-mid); margin-bottom: 0.8rem; display: block;
-}
-.sit-headline {
-  font-family: var(--display); font-size: 1.05rem;
-  font-weight: 600; color: var(--ink); line-height: 1.3; margin-bottom: 0.6rem;
-}
-.sit-body { font-size: 0.88rem; color: var(--ink-2); line-height: 1.65; }
-
-/* skip-ahead — visually dominant */
-.skip-ahead {
-  display: flex; align-items: center; gap: 1.4rem;
-  margin-bottom: 2rem;
-  animation: fadeUp 0.8s 0.18s ease both;
-}
-.skip-label {
-  font-family: var(--mono); font-size: 0.65rem;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--ink-mid); white-space: nowrap;
-}
-.skip-links { display: flex; gap: 0.8rem; flex-wrap: wrap; }
-.skip-link {
-  font-family: var(--mono); font-size: 0.65rem;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--accent); text-decoration: none;
-  border: 1px solid var(--accent-dim);
-  padding: 0.3rem 0.8rem;
-  transition: all 0.2s;
-}
-.skip-link:hover { background: var(--accent-dim); color: var(--ink); }
-
-.entry-bridge {
-  max-width: 560px; margin-bottom: 2rem;
-  animation: fadeUp 0.8s 0.22s ease both;
-}
-.entry-bridge p { font-size: 1.05rem; color: var(--ink-2); line-height: 1.8; margin-bottom: 0.8rem; }
-.entry-bridge strong { color: var(--ink); font-weight: 400; }
-.entry-name { font-family: var(--display); font-style: italic; font-size: 1.1rem; color: var(--accent); }
-
-.entry-ctas {
-  display: flex; gap: 1rem; flex-wrap: wrap;
-  animation: fadeUp 0.8s 0.28s ease both;
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(–ink-faint);
+margin-bottom: 8px;
+display: block;
 }
 
-.signal-bg {
-  position: absolute; right: 0; top: 50%;
-  transform: translateY(-50%);
-  width: 340px; height: 280px;
-  opacity: 0.09; pointer-events: none;
+.sit-head {
+font-family: var(–serif);
+font-size: 14px;
+font-weight: 500;
+color: var(–ink);
+line-height: 1.4;
+margin-bottom: 6px;
 }
 
-/* ═══════════════════════════════════════
-   02  RECOGNITION — distortions (tightened)
-═══════════════════════════════════════ */
-.recognition {
-  padding: 5rem 0;
-  border-top: 1px solid var(--rule);
-  position: relative; z-index: 1;
+.sit-body {
+font-size: 13px;
+color: var(–ink-mid);
+font-weight: 300;
+line-height: 1.6;
 }
 
-/* causal bridge line */
-.causal-bridge {
-  font-family: var(--display); font-style: italic;
-  font-size: 1.1rem; color: var(--ink-2);
-  max-width: 560px; margin-top: 0.8rem; line-height: 1.7;
+/* Distortion grid */
+.dist-grid {
+display: grid;
+grid-template-columns: 1fr;
+gap: 10px;
+margin-top: 20px;
 }
 
-/* 4-card grid instead of 6 */
-.distortion-grid {
-  display: grid; grid-template-columns: repeat(2,1fr);
-  gap: 1px; background: var(--rule); border: 1px solid var(--rule);
-  margin-top: 2.5rem;
+@media (min-width: 480px) {
+.dist-grid { grid-template-columns: 1fr 1fr; }
 }
+
 .dist-card {
-  background: var(--bg-2); padding: 1.8rem 1.7rem;
-  transition: background 0.2s; position: relative;
+background: var(–white);
+border: 1px solid var(–border);
+border-radius: 6px;
+padding: 18px;
 }
-.dist-card:hover { background: var(--bg-3); }
 
 .dist-pip {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--red); margin-bottom: 1rem; display: block;
+width: 7px; height: 7px;
+border-radius: 50%;
+background: var(–red);
+margin-bottom: 10px;
+display: block;
 }
+
 .dist-name {
-  font-family: var(--display); font-style: italic;
-  font-size: 1.05rem; color: var(--ink); margin-bottom: 0.5rem; line-height: 1.3;
+font-family: var(–serif);
+font-size: 15px;
+font-style: italic;
+font-weight: 500;
+color: var(–ink);
+margin-bottom: 6px;
+line-height: 1.3;
 }
-.dist-def { font-size: 0.88rem; color: var(--ink-2); line-height: 1.7; }
+
+.dist-def {
+font-size: 13px;
+color: var(–ink-mid);
+font-weight: 300;
+line-height: 1.65;
+margin-bottom: 10px;
+}
+
 .dist-source {
-  margin-top: 1rem; padding-top: 0.75rem;
-  border-top: 1px solid var(--rule-light);
-  font-family: var(--mono); font-size: 0.6rem;
-  letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mid);
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.08em;
+color: var(–ink-faint);
+padding-top: 10px;
+border-top: 1px solid var(–border);
 }
 
-.distortion-footnote {
-  margin-top: 1.5rem;
-  font-family: var(--mono); font-size: 0.65rem;
-  letter-spacing: 0.1em; color: var(--ink-mid);
-  display: flex; align-items: center; gap: 0.8rem;
-}
-.distortion-footnote::before { content:''; width:20px; height:1px; background: var(--rule-light); }
-
-/* ═══════════════════════════════════════
-   03  STRUCTURE — capacities as lens
-═══════════════════════════════════════ */
-.structure {
-  padding: 5rem 0;
-  border-top: 1px solid var(--rule);
-  position: relative; z-index: 1;
-}
-
-.structure-intro {
-  display: grid; grid-template-columns: 1.15fr 1fr;
-  gap: 3.5rem; align-items: start; margin-bottom: 2.5rem;
-}
-
+/* ── STRUCTURE ── */
 .integrity-note {
-  margin-top: 1.5rem; padding: 1.4rem;
-  border: 1px solid var(--rule-light);
-  background: rgba(78,155,181,0.05);
+background: var(–white);
+border: 1px solid var(–border);
+border-left: 3px solid var(–ink);
+border-radius: 0 6px 6px 0;
+padding: 16px 18px;
+margin-bottom: 28px;
+font-size: 14px;
+color: var(–ink-mid);
+font-weight: 300;
+line-height: 1.7;
 }
-.integrity-note p { font-size: 0.93rem; color: var(--ink-2); line-height: 1.75; }
-.integrity-note strong { color: var(--accent); font-weight: 400; }
 
-/* capacity grid — 5 cards */
-.capacity-grid {
-  display: grid; grid-template-columns: repeat(5,1fr);
-  gap: 1px; background: var(--rule); border: 1px solid var(--rule);
+.integrity-note strong {
+color: var(–ink);
+font-weight: 500;
 }
+
+.cap-grid {
+display: grid;
+grid-template-columns: 1fr;
+gap: 1px;
+background: var(–border);
+border: 1px solid var(–border);
+border-radius: 6px;
+overflow: hidden;
+margin-bottom: 24px;
+}
+
+@media (min-width: 480px) {
+.cap-grid { grid-template-columns: 1fr 1fr; }
+}
+
 .cap-card {
-  background: var(--bg-2); padding: 1.5rem 1.1rem;
-  position: relative; overflow: hidden;
-  transition: background 0.25s; cursor: default;
+background: var(–white);
+padding: 18px;
+position: relative;
+overflow: hidden;
+transition: background 0.15s;
 }
-.cap-card:hover { background: var(--bg-3); }
+
+.cap-card:hover { background: var(–bg-2); }
 .cap-card:hover .cap-bar { width: 100%; }
 
 .cap-num {
-  font-family: var(--mono); font-size: 0.55rem;
-  letter-spacing: 0.14em; color: var(--ink-mid);
-  margin-bottom: 0.8rem; display: block;
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.1em;
+color: var(–ink-faint);
+margin-bottom: 6px;
+display: block;
 }
-.cap-icon { font-size: 1.2rem; color: var(--rule-light); display: block; margin-bottom: 0.6rem; }
+
 .cap-name {
-  font-family: var(--display); font-size: 0.92rem;
-  font-weight: 600; color: var(--ink); line-height: 1.2; margin-bottom: 0.2rem;
+font-family: var(–serif);
+font-size: 15px;
+font-weight: 500;
+color: var(–ink);
+margin-bottom: 3px;
 }
+
 .cap-plain {
-  font-family: var(--mono); font-size: 0.68rem; font-style: italic;
-  color: var(--accent); margin-bottom: 0.55rem; letter-spacing: 0.02em;
+font-family: var(–mono);
+font-size: 11px;
+color: var(–ink-light);
+margin-bottom: 10px;
+font-style: italic;
+letter-spacing: 0.02em;
 }
-/* breaks / restores pairing */
+
 .cap-breaks {
-  font-size: 0.78rem; color: var(--ink-2); line-height: 1.6;
-  margin-bottom: 0.5rem;
+font-size: 12px;
+color: var(–ink-mid);
+font-weight: 300;
+line-height: 1.55;
+margin-bottom: 8px;
 }
+
 .cap-restores {
-  font-size: 0.75rem; color: var(--green);
-  font-family: var(--mono); letter-spacing: 0.04em;
-  border-top: 1px solid var(--rule-light);
-  padding-top: 0.5rem; margin-top: 0.3rem;
-  line-height: 1.5;
+font-size: 12px;
+color: var(–green);
+font-family: var(–mono);
+letter-spacing: 0.02em;
+border-top: 1px solid var(–border);
+padding-top: 8px;
+line-height: 1.5;
 }
+
 .cap-bar {
-  position: absolute; bottom:0; left:0; height:2px;
-  background: var(--accent); width:0; transition: width 0.4s ease;
+position: absolute;
+bottom: 0; left: 0;
+height: 2px;
+background: var(–ink);
+width: 0;
+transition: width 0.4s ease;
 }
 
-/* ── SCAN BLOCK — gateway treatment ── */
-.scan-gateway {
-  margin-top: 3rem;
-  border: 1px solid var(--accent-dim);
-  background: linear-gradient(135deg, rgba(109,184,212,0.06) 0%, rgba(13,17,24,0) 60%);
-  overflow: hidden;
+/* Scan block */
+.scan-block {
+background: var(–white);
+border: 1px solid var(–border);
+border-radius: 6px;
+overflow: hidden;
 }
-.scan-gateway-header {
-  background: var(--accent-dim);
-  padding: 1rem 1.8rem;
-  display: flex; align-items: center; justify-content: space-between;
+
+.scan-header {
+background: var(–ink);
+padding: 12px 18px;
+display: flex;
+align-items: center;
+justify-content: space-between;
 }
-.scan-gateway-title {
-  font-family: var(--display); font-size: 1.05rem;
-  font-weight: 600; color: var(--ink);
+
+.scan-title {
+font-family: var(–serif);
+font-size: 15px;
+font-weight: 500;
+color: var(–white);
 }
-.scan-gateway-sub {
-  font-family: var(--mono); font-size: 0.62rem;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--accent);
+
+.scan-badge {
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: rgba(255,255,255,0.5);
 }
-.scan-body { padding: 1.8rem; }
+
+.scan-body { padding: 18px; }
+
 .scan-intro {
-  font-size: 0.95rem; color: var(--ink-2); line-height: 1.75;
-  margin-bottom: 1.5rem; max-width: 520px;
+font-size: 13px;
+color: var(–ink-mid);
+font-weight: 300;
+line-height: 1.65;
+margin-bottom: 16px;
 }
+
 .scan-steps {
-  display: grid; grid-template-columns: repeat(4,1fr);
-  gap: 1px; background: var(--rule);
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 1px;
+background: var(–border);
+border: 1px solid var(–border);
+border-radius: 4px;
+overflow: hidden;
 }
-.scan-step { background: var(--bg-3); padding: 1rem 1.1rem; }
+
+.scan-step {
+background: var(–bg-2);
+padding: 12px 14px;
+}
+
 .step-n {
-  font-family: var(--mono); font-size: 0.6rem;
-  letter-spacing: 0.15em; color: var(--accent);
-  margin-bottom: 0.4rem; display: block;
-}
-.step-text { font-size: 0.84rem; color: var(--ink-2); line-height: 1.55; }
-
-/* ═══════════════════════════════════════
-   04  DEMONSTRATION
-═══════════════════════════════════════ */
-.demonstration {
-  padding: 5rem 0;
-  border-top: 1px solid var(--rule);
-  position: relative; z-index: 1;
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.12em;
+color: var(–ink-light);
+margin-bottom: 4px;
+display: block;
 }
 
-/* causal bridge into demonstration */
-.demo-bridge {
-  font-size: 1rem; color: var(--ink-2); line-height: 1.8;
-  max-width: 580px; margin-bottom: 2.5rem;
-}
-.demo-bridge strong { color: var(--ink); font-weight: 400; }
-
-.example-frame { border: 1px solid var(--rule-light); overflow: hidden; }
-.example-header {
-  background: var(--bg-2); border-bottom: 1px solid var(--rule);
-  padding: 0.9rem 1.3rem;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.example-title {
-  font-family: var(--mono); font-size: 0.65rem;
-  letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-mid);
-}
-.example-badge {
-  font-family: var(--mono); font-size: 0.58rem;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--signal); border: 1px solid var(--signal-dim); padding: 0.14rem 0.55rem;
-}
-.example-table { width: 100%; border-collapse: collapse; }
-.example-table th {
-  background: var(--bg-3); font-family: var(--mono); font-size: 0.6rem;
-  letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--ink-mid); text-align: left;
-  padding: 0.75rem 1.1rem; border-bottom: 1px solid var(--rule);
-}
-.example-table td {
-  padding: 1rem 1.1rem; border-bottom: 1px solid var(--rule);
-  font-size: 0.87rem; color: var(--ink-2);
-  vertical-align: top; line-height: 1.6;
-}
-.example-table tr:last-child td { border-bottom: none; }
-.example-table tr:hover td { background: rgba(255,255,255,0.02); }
-.cap-label-cell {
-  font-family: var(--display); font-style: italic;
-  font-size: 0.92rem; color: var(--ink); font-weight: 400;
-}
-.distortion-cell { color: var(--red) !important; font-style: italic; }
-.repair-cell { color: var(--green) !important; }
-
-/* ═══════════════════════════════════════
-   05  ACTION — tools with hierarchy
-═══════════════════════════════════════ */
-.action {
-  padding: 5rem 0;
-  border-top: 1px solid var(--rule);
-  position: relative; z-index: 1;
+.step-text {
+font-size: 12px;
+color: var(–ink-mid);
+font-weight: 300;
+line-height: 1.5;
 }
 
-.tools-primary {
-  display: grid; grid-template-columns: repeat(2,1fr);
-  gap: 1px; background: var(--rule); border: 1px solid var(--rule);
-  margin-top: 2.5rem;
-}
-.tools-secondary {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 1px; background: var(--rule);
-  border: 1px solid var(--rule); border-top: none;
+/* ── DEMONSTRATION TABLE ── */
+.demo-intro {
+font-size: 14px;
+color: var(–ink-mid);
+font-weight: 300;
+line-height: 1.7;
+margin-bottom: 20px;
 }
 
-.tools-tier-label {
-  font-family: var(--mono); font-size: 0.6rem;
-  letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--ink-mid); padding: 0.7rem 1.1rem;
-  background: var(--bg-3); border-top: 1px solid var(--rule);
-  border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);
-  margin-top: 2rem;
+.demo-intro strong { color: var(–ink); font-weight: 500; }
+
+.demo-frame {
+background: var(–white);
+border: 1px solid var(–border);
+border-radius: 6px;
+overflow: hidden;
+}
+
+.demo-header {
+background: var(–bg-2);
+border-bottom: 1px solid var(–border);
+padding: 10px 16px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+flex-wrap: wrap;
+gap: 8px;
+}
+
+.demo-title {
+font-family: var(–mono);
+font-size: 11px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(–ink-mid);
+}
+
+.demo-badge {
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(–ink-faint);
+border: 1px solid var(–border);
+padding: 2px 8px;
+border-radius: 3px;
+}
+
+.demo-table { width: 100%; border-collapse: collapse; }
+
+.demo-table th {
+background: var(–bg-2);
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: var(–ink-light);
+text-align: left;
+padding: 10px 14px;
+border-bottom: 1px solid var(–border);
+}
+
+.demo-table td {
+padding: 12px 14px;
+border-bottom: 1px solid var(–border);
+font-size: 13px;
+color: var(–ink-mid);
+vertical-align: top;
+line-height: 1.55;
+font-weight: 300;
+}
+
+.demo-table tr:last-child td { border-bottom: none; }
+.demo-table tr:hover td { background: var(–bg-2); }
+
+.td-cap {
+font-family: var(–serif);
+font-style: italic;
+font-size: 14px;
+color: var(–ink);
+font-weight: 400;
+}
+
+.td-dist { color: var(–red) !important; font-style: italic; }
+.td-repair { color: var(–green) !important; }
+
+@media (max-width: 600px) {
+.demo-table thead { display: none; }
+.demo-table, .demo-table tbody, .demo-table tr, .demo-table td { display: block; width: 100%; }
+.demo-table tr { border-bottom: 2px solid var(–border); padding: 10px 0; }
+.demo-table tr:last-child { border-bottom: none; }
+.demo-table td { padding: 4px 14px; border-bottom: none; }
+.demo-table td::before { content: attr(data-label); display: block; font-family: var(–mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(–ink-faint); margin-bottom: 3px; }
+}
+
+/* ── TOOLS ── */
+.tools-intro {
+font-size: 14px;
+color: var(–ink-mid);
+font-weight: 300;
+line-height: 1.7;
+margin-bottom: 24px;
+}
+
+.tools-tier {
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+color: var(–ink-faint);
+margin-bottom: 10px;
+margin-top: 24px;
+}
+
+.tools-tier:first-of-type { margin-top: 0; }
+
+.tool-grid-primary {
+display: grid;
+grid-template-columns: 1fr;
+gap: 1px;
+background: var(–border);
+border: 1px solid var(–border);
+border-radius: 6px;
+overflow: hidden;
+margin-bottom: 2px;
+}
+
+@media (min-width: 480px) {
+.tool-grid-primary { grid-template-columns: 1fr 1fr; }
+}
+
+.tool-grid-secondary {
+display: grid;
+grid-template-columns: 1fr;
+gap: 1px;
+background: var(–border);
+border: 1px solid var(–border);
+border-top: none;
+border-radius: 0 0 6px 6px;
+overflow: hidden;
+}
+
+@media (min-width: 480px) {
+.tool-grid-secondary { grid-template-columns: 1fr 1fr 1fr; }
 }
 
 .tool-card {
-  background: var(--bg-2); padding: 2rem 1.8rem;
-  text-decoration: none; display: block;
-  transition: background 0.2s; position: relative;
-}
-.tool-card.secondary { padding: 1.5rem 1.5rem; }
-.tool-card:hover { background: var(--bg-3); }
-.tool-card:hover .tc-arrow { opacity:1; transform:translate(0,0); }
-
-.tc-stage {
-  font-family: var(--mono); font-size: 0.58rem;
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--signal); margin-bottom: 0.9rem; display: block;
-}
-.tc-name {
-  font-family: var(--display); font-size: 1.1rem;
-  font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; line-height: 1.25;
-}
-.tool-card.secondary .tc-name { font-size: 0.98rem; }
-.tc-desc { font-size: 0.87rem; color: var(--ink-2); line-height: 1.65; }
-.tc-arrow {
-  position: absolute; bottom: 1.4rem; right: 1.4rem;
-  font-family: var(--mono); font-size: 0.7rem; color: var(--accent);
-  opacity: 0; transform: translate(-4px,4px); transition: all 0.2s;
+background: var(–white);
+padding: 20px;
+text-decoration: none;
+display: block;
+transition: background 0.15s;
+position: relative;
 }
 
-/* ═══════════════════════════════════════
-   06  GROUNDING — CPT as constraint engine
-═══════════════════════════════════════ */
-.grounding {
-  background: var(--bg-2);
-  border-top: 1px solid var(--rule);
-  padding: 4rem 0;
-  position: relative; z-index: 1;
-}
-.grounding-inner {
-  display: grid; grid-template-columns: 1fr 1.6fr;
-  gap: 4rem; align-items: start;
-}
-.grounding-label {
-  font-family: var(--mono); font-size: 0.62rem;
-  letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--ink-mid); margin-bottom: 0.7rem;
-}
-.grounding-title {
-  font-family: var(--display); font-size: 1.55rem;
-  font-weight: 600; color: var(--ink); line-height: 1.2; margin-bottom: 1rem;
-}
-.grounding-title em { font-style: italic; color: var(--accent); }
-.grounding-body { font-size: 0.93rem; color: var(--ink-2); line-height: 1.8; margin-bottom: 1rem; }
+.tool-card:hover { background: var(–bg-2); }
+.tool-card:hover .tool-arrow { opacity: 1; transform: translate(0,0); }
 
-/* constraint framing */
-.constraint-block {
-  margin-top: 1.2rem; padding: 1.2rem 1.4rem;
-  border-left: 2px solid var(--red);
-  background: rgba(184,96,80,0.05);
-}
-.constraint-block p {
-  font-family: var(--mono); font-size: 0.78rem;
-  letter-spacing: 0.04em; color: var(--ink-2); line-height: 1.7;
-}
-.constraint-block strong { color: var(--ink); font-weight: 500; }
+.tool-card.secondary { padding: 16px 18px; }
 
-.grounding-axioms {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
-  background: var(--rule); border: 1px solid var(--rule);
-}
-.g-ax {
-  background: var(--bg-3); padding: 1.1rem 1.2rem;
-  display: grid; grid-template-columns: 2.2rem 1fr; gap: 0.7rem; align-items: start;
-}
-.g-ax-n {
-  font-family: var(--mono); font-size: 0.57rem;
-  letter-spacing: 0.1em; color: var(--ink-mid); padding-top: 0.2rem;
-}
-.g-ax-t {
-  font-style: italic; font-size: 0.87rem;
-  color: var(--ink-2); line-height: 1.65;
+.tool-stage {
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: var(–warm);
+margin-bottom: 8px;
+display: block;
 }
 
-/* ── CLOSING ── */
-.closing {
-  padding: 5rem 0 4rem; position: relative; z-index: 1;
-  text-align: center; border-top: 1px solid var(--rule);
-}
-.closing-principle {
-  border-left: 2px solid var(--accent);
-  padding: 1.2rem 2rem; text-align: left;
-  background: rgba(109,184,212,0.05);
-  max-width: 420px; margin: 0 auto 2.5rem;
-}
-.closing-principle p {
-  font-family: var(--display); font-style: italic;
-  font-size: 1.08rem; color: var(--ink-2); line-height: 1.7;
-}
-.closing-attr {
-  font-family: var(--mono); font-size: 0.62rem;
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--ink-mid); margin-bottom: 2.5rem;
-}
-.closing-ctas { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+.tool-stage.doc { color: var(–ink-faint); }
 
-/* ── FOOTER ── */
+.tool-name {
+font-family: var(–serif);
+font-size: 16px;
+font-weight: 500;
+color: var(–ink);
+margin-bottom: 6px;
+line-height: 1.3;
+}
+
+.tool-card.secondary .tool-name { font-size: 14px; }
+
+.tool-desc {
+font-size: 13px;
+color: var(–ink-mid);
+font-weight: 300;
+line-height: 1.6;
+}
+
+.tool-arrow {
+position: absolute;
+bottom: 16px; right: 16px;
+font-family: var(–mono);
+font-size: 12px;
+color: var(–ink-light);
+opacity: 0;
+transform: translate(-4px, 4px);
+transition: all 0.2s;
+}
+
+.tool-card.coming-soon {
+opacity: 0.6;
+cursor: default;
+pointer-events: none;
+}
+
+.coming-badge {
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(–ink-faint);
+border: 1px solid var(–border);
+padding: 2px 7px;
+border-radius: 3px;
+display: inline-block;
+margin-top: 10px;
+}
+
+/* ── CPT AXIOMS ── */
+.cpt-block {
+background: var(–white);
+border: 1px solid var(–border);
+border-radius: 6px;
+overflow: hidden;
+margin-top: 20px;
+}
+
+.cpt-header {
+background: var(–bg-2);
+border-bottom: 1px solid var(–border);
+padding: 12px 18px;
+}
+
+.cpt-title {
+font-family: var(–serif);
+font-size: 15px;
+font-weight: 500;
+color: var(–ink);
+margin-bottom: 2px;
+}
+
+.cpt-sub {
+font-size: 12px;
+color: var(–ink-faint);
+font-weight: 300;
+}
+
+.axiom-grid {
+display: grid;
+grid-template-columns: 1fr;
+gap: 1px;
+background: var(–border);
+}
+
+@media (min-width: 480px) {
+.axiom-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.axiom {
+background: var(–white);
+padding: 14px 16px;
+display: flex;
+gap: 12px;
+align-items: flex-start;
+}
+
+.axiom-n {
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.08em;
+color: var(–ink-faint);
+flex-shrink: 0;
+padding-top: 2px;
+min-width: 32px;
+}
+
+.axiom-t {
+font-family: var(–serif);
+font-style: italic;
+font-size: 13px;
+color: var(–ink-mid);
+line-height: 1.6;
+}
+
+/* ── PRINCIPLE BLOCK ── */
+.principle {
+background: var(–ink);
+color: var(–white);
+border-radius: 8px;
+padding: 36px 28px;
+margin: 0 24px;
+max-width: 672px;
+margin-left: auto;
+margin-right: auto;
+}
+
+.principle-lines {
+display: flex;
+flex-direction: column;
+gap: 6px;
+margin-bottom: 20px;
+}
+
+.principle-line {
+font-family: var(–serif);
+font-style: italic;
+font-size: clamp(16px, 3.5vw, 19px);
+color: rgba(255,255,255,0.88);
+line-height: 1.5;
+}
+
+.principle-attr {
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.16em;
+text-transform: uppercase;
+color: rgba(255,255,255,0.3);
+}
+
+/* ── CONTACT ── */
+.contact-box {
+background: var(–white);
+border: 1px solid var(–border);
+border-radius: 6px;
+padding: 24px;
+}
+
+.contact-title {
+font-family: var(–serif);
+font-size: 18px;
+font-weight: 500;
+color: var(–ink);
+margin-bottom: 8px;
+}
+
+.contact-text {
+font-size: 14px;
+color: var(–ink-mid);
+font-weight: 300;
+line-height: 1.7;
+margin-bottom: 18px;
+}
+
+.contact-links {
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+
+.contact-link {
+font-size: 13px;
+color: var(–ink-mid);
+text-decoration: none;
+display: flex;
+align-items: center;
+gap: 10px;
+transition: color 0.15s;
+}
+
+.contact-link:hover { color: var(–ink); }
+
+.contact-link-label {
+font-family: var(–mono);
+font-size: 10px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(–ink-faint);
+min-width: 56px;
+}
+
+/* FOOTER */
 footer {
-  border-top: 1px solid var(--rule); padding: 2rem 2.5rem;
-  display: flex; align-items: center; justify-content: space-between;
-  position: relative; z-index: 1;
-  max-width: 1080px; margin: 0 auto;
+border-top: 1px solid var(–border);
+padding: 24px;
+max-width: 720px;
+margin: 0 auto;
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-wrap: wrap;
+gap: 12px;
 }
-.ft-left {
-  font-family: var(--mono); font-size: 0.62rem;
-  letter-spacing: 0.1em; color: var(--ink-mid); line-height: 1.7;
-}
-.ft-left span { color: var(--accent); }
-.ft-links { display:flex; gap:1.8rem; list-style:none; }
-.ft-links a {
-  font-family: var(--mono); font-size: 0.62rem;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--ink-mid); text-decoration: none; transition: color 0.2s;
-}
-.ft-links a:hover { color: var(--ink); }
 
-/* ── MOBILE TABLE FIX ── */
-@media(max-width:700px){
-  .example-table thead { display: none; }
-  .example-table, .example-table tbody, .example-table tr, .example-table td {
-    display: block; width: 100%;
-  }
-  .example-table tr {
-    border-bottom: 2px solid var(--rule-light);
-    padding: 1rem 0;
-  }
-  .example-table tr:last-child { border-bottom: none; }
-  .example-table td {
-    padding: 0.3rem 1.1rem;
-    border-bottom: none;
-  }
-  .example-table td::before {
-    content: attr(data-label);
-    display: block;
-    font-family: var(--mono);
-    font-size: 0.58rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-mid);
-    margin-bottom: 0.2rem;
-  }
-  .cap-label-cell { font-size: 1rem; padding-top: 1rem !important; }
+.footer-left {
+font-family: var(–mono);
+font-size: 11px;
+letter-spacing: 0.06em;
+color: var(–ink-faint);
+line-height: 1.6;
 }
-@media(max-width:900px){
-  nav { padding:0.9rem 1.2rem; }
-  .nav-status { display:none; }
-  .wrap { padding:0 1.2rem; }
-  .entry { padding:7rem 1.2rem 3rem; }
-  .signal-bg { display:none; }
-  .entry-situations { grid-template-columns:1fr; }
-  .distortion-grid { grid-template-columns:1fr; }
-  .structure-intro { grid-template-columns:1fr; gap:2rem; }
-  .capacity-grid { grid-template-columns:repeat(2,1fr); }
-  .scan-steps { grid-template-columns:repeat(2,1fr); }
-  .tools-primary { grid-template-columns:1fr; }
-  .tools-secondary { grid-template-columns:1fr; }
-  .grounding-inner { grid-template-columns:1fr; gap:2.5rem; }
-  .grounding-axioms { grid-template-columns:1fr; }
-  footer { flex-direction:column; gap:1.2rem; align-items:flex-start; }
-}
-@media(max-width:560px){
-  .capacity-grid { grid-template-columns:1fr; }
-  .skip-ahead { flex-direction:column; align-items:flex-start; gap:0.8rem; }
-}
-```
 
-  </style>
+.footer-links {
+display: flex;
+gap: 18px;
+list-style: none;
+}
+
+.footer-links a {
+font-family: var(–mono);
+font-size: 11px;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+color: var(–ink-faint);
+text-decoration: none;
+transition: color 0.15s;
+}
+
+.footer-links a:hover { color: var(–ink-mid); }
+
+hr.rule { border: none; border-top: 1px solid var(–border); margin: 0 24px; }
+</style>
+
 </head>
 <body>
 
@@ -659,227 +958,182 @@ footer {
 <nav>
   <a class="nav-mark" href="#">Field &amp; Signal</a>
   <ul class="nav-links">
-    <li><a href="#recognition">What's happening</a></li>
-    <li><a href="#structure">How to read it</a></li>
-    <li><a href="#action">Use the tools</a></li>
-    <li><a href="https://github.com/nogameariel/field-signal-system" target="_blank">Full corpus</a></li>
+    <li class="hide-mobile"><a href="#recognition">What's happening</a></li>
+    <li class="hide-mobile"><a href="#structure">How to read it</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#contact" class="nav-cta">Get in touch</a></li>
   </ul>
-  <div class="nav-status"><span class="nav-dot"></span>v3.0 — Public Release</div>
 </nav>
 
-<!-- ══ 01 ENTRY MOMENT ══ -->
+<!-- HERO -->
 
-<div class="entry">
-  <div class="entry-kicker">You already know something is wrong</div>
-
-  <h1 class="entry-question">
-    Something in the system around you<br>
-    keeps failing — and no one can say why.
-  </h1>
-
-  <div class="entry-situations">
-    <div class="situation">
-      <span class="sit-mark">You've noticed —</span>
-      <div class="sit-headline">The same problems keep returning, even after something was "fixed."</div>
-      <p class="sit-body">New leadership, new policy, new initiative — the pattern reasserts itself within months. The solution never quite lands.</p>
-    </div>
-    <div class="situation">
-      <span class="sit-mark">You've noticed —</span>
-      <div class="sit-headline">People are going through the motions. Meetings happen. Nothing changes.</div>
-      <p class="sit-body">There's participation on the surface and silence underneath it. Everyone is performing cooperation while the real problems stay unspoken.</p>
-    </div>
-    <div class="situation">
-      <span class="sit-mark">You've noticed —</span>
-      <div class="sit-headline">It's not that anyone is evil. The structure itself seems to push toward bad outcomes.</div>
-      <p class="sit-body">You can't point to a villain. The incentives, the feedback loops, the information flows — arranged in a way that makes failure almost inevitable.</p>
-    </div>
+<div class="hero">
+  <div class="hero-eyebrow">Field &amp; Signal</div>
+  <div class="hero-body">
+    We all participate in systems that stop working — and keep participating long after we feel it.<br><br>
+    <em>Not in obvious ways. In ways that are hard to name.</em><br><br>
+    Where effort doesn't produce change.<br>
+    Where leadership responds to something other than reality.<br>
+    Where you start to question your own perception.
   </div>
-
-  <div class="skip-ahead">
-    <span class="skip-label">Skip ahead →</span>
-    <div class="skip-links">
-      <a href="#recognition" class="skip-link">Name what I'm seeing</a>
-      <a href="#action" class="skip-link">Go straight to tools</a>
-      <a href="https://nogameariel.github.io/field-signal-system/tools/master-corpus.html" class="skip-link" target="_blank">Full corpus</a>
-    </div>
+  <div class="hero-statement">
+    <h1>Field &amp; Signal is a living framework for reading it clearly — and finding where repair is possible.</h1>
+    <p class="hero-sub">A diagnostic and design framework for institutional stability and repair. Built for citizens, practitioners, and anyone inside a system that has stopped making sense.</p>
   </div>
-
-  <div class="entry-bridge">
-    <p>These aren't isolated frustrations. They're <strong>structural patterns</strong> — and they have names, sources, and points where repair becomes possible.</p>
-    <p><span class="entry-name">Field &amp; Signal</span> is a framework for reading those patterns precisely, so you can act on what's actually happening — not just what's visible on the surface.</p>
+  <div class="hero-actions">
+    <a href="#tools" class="btn-primary">Go to the tools →</a>
+    <a href="#recognition" class="btn-secondary">See if you recognize this</a>
   </div>
-
-  <div class="entry-ctas">
-    <a href="#recognition" class="btn btn-primary">See if you recognize this →</a>
-    <a href="#action" class="btn btn-ghost">Go straight to instruments</a>
-  </div>
-
-  <svg class="signal-bg" viewBox="0 0 340 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <line x1="0" y1="70" x2="340" y2="70" stroke="#4e9bb5" stroke-width="0.5" opacity="0.5"/>
-    <line x1="0" y1="140" x2="340" y2="140" stroke="#4e9bb5" stroke-width="0.5" opacity="0.6"/>
-    <line x1="0" y1="210" x2="340" y2="210" stroke="#4e9bb5" stroke-width="0.5" opacity="0.5"/>
-    <line x1="85" y1="0" x2="85" y2="280" stroke="#4e9bb5" stroke-width="0.5" opacity="0.35"/>
-    <line x1="170" y1="0" x2="170" y2="280" stroke="#4e9bb5" stroke-width="0.5" opacity="0.35"/>
-    <line x1="255" y1="0" x2="255" y2="280" stroke="#4e9bb5" stroke-width="0.5" opacity="0.35"/>
-    <polyline points="0,140 20,140 35,88 50,196 65,118 80,166 96,138 114,140 132,140 148,80 164,204 180,140 198,140 214,100 230,182 246,134 262,140 282,140 298,120 314,160 330,142 340,140" stroke="#4e9bb5" stroke-width="1.6" fill="none"/>
-    <circle r="3" fill="#6db8d4" opacity="0.9">
-      <animateMotion dur="10s" repeatCount="indefinite" path="M0,140 L20,140 L35,88 L50,196 L65,118 L80,166 L96,138 L114,140 L132,140 L148,80 L164,204 L180,140 L198,140 L214,100 L230,182 L246,134 L262,140 L282,140 L298,120 L314,160 L330,142 L340,140"/>
-      <animate attributeName="opacity" values="0;0.9;0.9;0" dur="10s" repeatCount="indefinite"/>
-    </circle>
-  </svg>
 </div>
 
-<!-- ══ 02 RECOGNITION ══ -->
+<hr class="rule">
 
-<section class="recognition" id="recognition">
+<!-- RECOGNITION -->
+
+<div class="section" id="recognition">
 <div class="wrap">
-  <div class="reveal">
-    <div class="sec-label">02 — Recognition</div>
-    <h2 class="sec-heading">These patterns<br>have <em>names.</em></h2>
-    <p class="causal-bridge">What you're experiencing at the surface is a distortion — a symptom of something structural happening underneath. A sample of common signal collapse patterns:</p>
+  <div class="section-label reveal">What's happening</div>
+  <p class="rec-intro reveal">These aren't isolated frustrations. They're structural patterns — and they have names, sources, and points where repair becomes possible.</p>
+
+  <div class="situations reveal">
+    <div class="situation">
+      <span class="sit-mark">You've noticed —</span>
+      <div class="sit-head">The same problems return even after something was "fixed."</div>
+      <p class="sit-body">New leadership, new policy — the pattern reasserts itself within months.</p>
+    </div>
+    <div class="situation">
+      <span class="sit-mark">You've noticed —</span>
+      <div class="sit-head">People go through the motions. Meetings happen. Nothing changes.</div>
+      <p class="sit-body">Participation on the surface, silence underneath. Real problems stay unspoken.</p>
+    </div>
+    <div class="situation">
+      <span class="sit-mark">You've noticed —</span>
+      <div class="sit-head">It's not that anyone is evil. The structure pushes toward bad outcomes.</div>
+      <p class="sit-body">You can't point to a villain. The incentives and feedback loops make failure almost inevitable.</p>
+    </div>
   </div>
 
-  <div class="distortion-grid reveal">
+  <div class="section-label reveal" style="margin-top:32px;">Common signal collapse patterns</div>
+  <div class="dist-grid reveal">
     <div class="dist-card">
       <span class="dist-pip"></span>
       <div class="dist-name">False Resonance</div>
-      <p class="dist-def">The system looks like it's responding. Announcements are made, committees are formed, language changes. The underlying structure doesn't move. This is the most common form of institutional stall.</p>
+      <p class="dist-def">The system looks like it's responding. Announcements are made, committees formed, language changes. The underlying structure doesn't move.</p>
       <div class="dist-source">→ Legitimacy capacity degraded</div>
     </div>
     <div class="dist-card">
       <span class="dist-pip"></span>
       <div class="dist-name">Suppressed Signal</div>
-      <p class="dist-def">Accurate information exists inside the system but stops flowing to where decisions are made. The people with power to act are the last to know what's actually happening.</p>
+      <p class="dist-def">Accurate information exists inside the system but stops flowing to where decisions are made. The people with power to act are the last to know.</p>
       <div class="dist-source">→ Reality capacity degraded</div>
     </div>
     <div class="dist-card">
       <span class="dist-pip"></span>
       <div class="dist-name">Defensive Messaging</div>
-      <p class="dist-def">The system has stopped learning. Every failure is absorbed into narrative rather than correction. Repeated errors get different names, not different responses. Reform language without reform behavior.</p>
+      <p class="dist-def">The system has stopped learning. Every failure is absorbed into narrative rather than correction. Repeated errors get different names, not different responses.</p>
       <div class="dist-source">→ Adaptive capacity degraded</div>
     </div>
     <div class="dist-card">
       <span class="dist-pip"></span>
       <div class="dist-name">Polarized Identity Formation</div>
-      <p class="dist-def">When coordination breaks down and shared purpose collapses, group membership becomes the primary currency. Analysis is replaced by allegiance. The problem becomes tribal rather than structural.</p>
+      <p class="dist-def">When coordination breaks down, group membership becomes the primary currency. Analysis is replaced by allegiance. The problem becomes tribal rather than structural.</p>
       <div class="dist-source">→ Coordination + normative capacity degraded</div>
     </div>
   </div>
-  <div class="distortion-footnote reveal">These four represent core archetypes. The full distortion lexicon is in the corpus.</div>
 </div>
-</section>
+</div>
 
-<!-- ══ 03 STRUCTURE — capacities as lens ══ -->
+<hr class="rule">
 
-<section class="structure" id="structure">
+<!-- STRUCTURE -->
+
+<div class="section" id="structure">
 <div class="wrap">
-  <div class="sec-label reveal">03 — The Lens</div>
-  <div class="structure-intro">
-    <div class="reveal">
-      <h2 class="sec-heading">Five capacities that explain<br><em>what's actually breaking</em></h2>
-      <p class="sec-sub">Each distortion above traces back to one of five structural capacities. Knowing which one is failing tells you where repair is actually possible — and where it isn't.</p>
-      <div class="integrity-note">
-        <p><strong>Integrity is not moral perfection.</strong> It is structural alignment between signal, decision, and outcome. When it degrades, distortion emerges. When it's restored, the system can function again.</p>
-      </div>
-    </div>
-    <div class="reveal">
-      <!-- SCAN BLOCK — gateway treatment -->
-      <div class="scan-gateway">
-        <div class="scan-gateway-header">
-          <div class="scan-gateway-title">15-Minute Capacity Scan</div>
-          <span class="scan-gateway-sub">Start here</span>
-        </div>
-        <div class="scan-body">
-          <p class="scan-intro">This is the first real intervention step. Pick a system — any system — and run it through these four steps.</p>
-          <div class="scan-steps">
-            <div class="scan-step">
-              <span class="step-n">01</span>
-              <p class="step-text">Pick a system — school board, workplace, city council, nonprofit.</p>
-            </div>
-            <div class="scan-step">
-              <span class="step-n">02</span>
-              <p class="step-text">Score each of the five capacities 1–5 based on what you can observe.</p>
-            </div>
-            <div class="scan-step">
-              <span class="step-n">03</span>
-              <p class="step-text">The weakest capacity is your primary intervention site.</p>
-            </div>
-            <div class="scan-step">
-              <span class="step-n">04</span>
-              <p class="step-text">Choose one targeted repair type matched to that capacity only.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="section-label reveal">How to read it</div>
+
+  <div class="integrity-note reveal">
+    <strong>Integrity is not moral perfection.</strong> It is structural alignment between signal, decision, and outcome. When that alignment breaks, distortion emerges. When it is restored, legitimacy stabilizes.
   </div>
 
-  <div class="capacity-grid reveal">
+  <div class="section-label reveal">Five core capacities</div>
+  <p class="reveal" style="font-size:13px;color:var(--ink-light);font-weight:300;line-height:1.65;margin-bottom:16px;">Long-term stability requires functionality across all five. Breakdown in any one produces distortion at the experiential level.</p>
+
+  <div class="cap-grid reveal">
     <div class="cap-card">
-      <span class="cap-num">CAP — 01</span>
-      <span class="cap-icon">◎</span>
+      <span class="cap-num">01</span>
       <div class="cap-name">Reality Capacity</div>
       <div class="cap-plain">Can the system see clearly?</div>
       <p class="cap-breaks">When this breaks: the system acts on distorted inputs, ignores accurate feedback, punishes honest reporting.</p>
-      <div class="cap-restores">Restored by: structured feedback channels, transparent signal logs, error acknowledgment obligations.</div>
+      <div class="cap-restores">Restored by: structured feedback channels, transparent signal logs.</div>
       <div class="cap-bar"></div>
     </div>
     <div class="cap-card">
-      <span class="cap-num">CAP — 02</span>
-      <span class="cap-icon">◈</span>
+      <span class="cap-num">02</span>
       <div class="cap-name">Legitimacy Capacity</div>
       <div class="cap-plain">Does anyone still trust it?</div>
-      <p class="cap-breaks">When this breaks: compliance replaces participation, performance replaces engagement, people exit or perform.</p>
-      <div class="cap-restores">Restored by: transparent decision matrices, published rationale, consistent follow-through.</div>
+      <p class="cap-breaks">When this breaks: compliance replaces participation, performance replaces engagement.</p>
+      <div class="cap-restores">Restored by: transparent decision matrices, consistent follow-through.</div>
       <div class="cap-bar"></div>
     </div>
     <div class="cap-card">
-      <span class="cap-num">CAP — 03</span>
-      <span class="cap-icon">⬡</span>
+      <span class="cap-num">03</span>
       <div class="cap-name">Coordination Capacity</div>
       <div class="cap-plain">Can people actually work together?</div>
-      <p class="cap-breaks">When this breaks: blame cycles form, silos harden, parallel efforts cancel each other out.</p>
-      <div class="cap-restores">Restored by: cross-functional review cadences, shared accountability structures.</div>
+      <p class="cap-breaks">When this breaks: blame cycles form, silos harden, parallel efforts cancel each other.</p>
+      <div class="cap-restores">Restored by: cross-functional review cadences, shared accountability.</div>
       <div class="cap-bar"></div>
     </div>
     <div class="cap-card">
-      <span class="cap-num">CAP — 04</span>
-      <span class="cap-icon">↻</span>
+      <span class="cap-num">04</span>
       <div class="cap-name">Adaptive Capacity</div>
       <div class="cap-plain">Can it learn from mistakes?</div>
-      <p class="cap-breaks">When this breaks: same failures repeat, defensive messaging replaces correction, the system hardens.</p>
+      <p class="cap-breaks">When this breaks: same failures repeat, defensive messaging replaces correction.</p>
       <div class="cap-restores">Restored by: protected error-reporting, binding acknowledgment of failure patterns.</div>
       <div class="cap-bar"></div>
     </div>
-    <div class="cap-card">
-      <span class="cap-num">CAP — 05</span>
-      <span class="cap-icon">◇</span>
+    <div class="cap-card" style="grid-column: 1 / -1;">
+      <span class="cap-num">05</span>
       <div class="cap-name">Normative Orientation</div>
       <div class="cap-plain">Does it know what it's for?</div>
       <p class="cap-breaks">When this breaks: mission drifts, group identity replaces shared purpose, polarization sets in.</p>
-      <div class="cap-restores">Restored by: explicit, shared goals that exist independent of current leadership or cycle.</div>
+      <div class="cap-restores">Restored by: explicit shared goals that exist independent of current leadership.</div>
       <div class="cap-bar"></div>
     </div>
   </div>
-</div>
-</section>
 
-<!-- ══ 04 DEMONSTRATION ══ -->
-
-<section class="demonstration" id="demonstration">
-<div class="wrap">
-  <div class="sec-label reveal">04 — In Practice</div>
-  <h2 class="sec-heading reveal">When capacities degrade,<br><em>this is what surfaces</em></h2>
-  <p class="demo-bridge reveal">
-    The five capacities aren't abstract. When each one fails, it produces <strong>observable, nameable conditions</strong> in a real system — and each condition points toward a specific repair lever. Here's what that looks like mapped onto a city council under stress.
-  </p>
-
-  <div class="example-frame reveal">
-    <div class="example-header">
-      <span class="example-title">Applied — City council under stress</span>
-      <span class="example-badge">Illustrative diagnostic output</span>
+  <div class="scan-block reveal">
+    <div class="scan-header">
+      <div class="scan-title">15-Minute Capacity Scan</div>
+      <span class="scan-badge">Start here</span>
     </div>
-    <table class="example-table">
+    <div class="scan-body">
+      <p class="scan-intro">Pick any system and run it through these four steps. This is the first real intervention step.</p>
+      <div class="scan-steps">
+        <div class="scan-step"><span class="step-n">01</span><p class="step-text">Pick a system — school board, workplace, city council, nonprofit.</p></div>
+        <div class="scan-step"><span class="step-n">02</span><p class="step-text">Score each of the five capacities 1–5 based on what you observe.</p></div>
+        <div class="scan-step"><span class="step-n">03</span><p class="step-text">The weakest capacity is your primary intervention site.</p></div>
+        <div class="scan-step"><span class="step-n">04</span><p class="step-text">Choose one targeted repair type matched to that capacity only.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="rule">
+
+<!-- DEMONSTRATION -->
+
+<div class="section" id="demonstration">
+<div class="wrap">
+  <div class="section-label reveal">In practice</div>
+  <p class="demo-intro reveal">The five capacities aren't abstract. When each one fails, it produces <strong>observable, nameable conditions</strong> — and each points toward a specific repair lever. Here's what that looks like mapped onto a city council under stress.</p>
+
+  <div class="demo-frame reveal">
+    <div class="demo-header">
+      <span class="demo-title">Applied — City council under stress</span>
+      <span class="demo-badge">Illustrative diagnostic output</span>
+    </div>
+    <table class="demo-table">
       <thead>
         <tr>
           <th>Capacity</th>
@@ -890,172 +1144,157 @@ footer {
       </thead>
       <tbody>
         <tr>
-          <td class="cap-label-cell" data-label="Capacity">Reality</td>
-          <td data-label="Observed condition">Public comment systematically ignored in decisions</td>
-          <td class="distortion-cell" data-label="Distortion signal">Signal suppression</td>
-          <td class="repair-cell" data-label="Repair lever">Structured response logs with binding acknowledgment</td>
+          <td class="td-cap" data-label="Capacity">Reality</td>
+          <td data-label="Observed">Public comment systematically ignored</td>
+          <td class="td-dist" data-label="Distortion">Signal suppression</td>
+          <td class="td-repair" data-label="Repair">Structured response logs with binding acknowledgment</td>
         </tr>
         <tr>
-          <td class="cap-label-cell" data-label="Capacity">Legitimacy</td>
-          <td data-label="Observed condition">Declining voter turnout across three election cycles</td>
-          <td class="distortion-cell" data-label="Distortion signal">Performance politics</td>
-          <td class="repair-cell" data-label="Repair lever">Transparent decision matrix published before votes</td>
+          <td class="td-cap" data-label="Capacity">Legitimacy</td>
+          <td data-label="Observed">Declining voter turnout across three cycles</td>
+          <td class="td-dist" data-label="Distortion">Performance politics</td>
+          <td class="td-repair" data-label="Repair">Transparent decision matrix published before votes</td>
         </tr>
         <tr>
-          <td class="cap-label-cell" data-label="Capacity">Coordination</td>
-          <td data-label="Observed condition">Chronic inter-department silos; competing priorities</td>
-          <td class="distortion-cell" data-label="Distortion signal">Blame cycles</td>
-          <td class="repair-cell" data-label="Repair lever">Cross-functional review cadence with shared accountability</td>
+          <td class="td-cap" data-label="Capacity">Coordination</td>
+          <td data-label="Observed">Chronic inter-department silos</td>
+          <td class="td-dist" data-label="Distortion">Blame cycles</td>
+          <td class="td-repair" data-label="Repair">Cross-functional review cadence with shared accountability</td>
         </tr>
         <tr>
-          <td class="cap-label-cell" data-label="Capacity">Adaptive</td>
-          <td data-label="Observed condition">Repeated policy failure with identical response pattern</td>
-          <td class="distortion-cell" data-label="Distortion signal">Defensive messaging</td>
-          <td class="repair-cell" data-label="Repair lever">Protected error-reporting channel with response obligation</td>
+          <td class="td-cap" data-label="Capacity">Adaptive</td>
+          <td data-label="Observed">Repeated policy failure, identical response</td>
+          <td class="td-dist" data-label="Distortion">Defensive messaging</td>
+          <td class="td-repair" data-label="Repair">Protected error-reporting channel with response obligation</td>
         </tr>
         <tr>
-          <td class="cap-label-cell" data-label="Capacity">Normative</td>
-          <td data-label="Observed condition">Mission drift; council identity replacing civic purpose</td>
-          <td class="distortion-cell" data-label="Distortion signal">Polarized identity framing</td>
-          <td class="repair-cell" data-label="Repair lever">Three shared civic goals independent of electoral cycles</td>
+          <td class="td-cap" data-label="Capacity">Normative</td>
+          <td data-label="Observed">Mission drift; council identity replacing civic purpose</td>
+          <td class="td-dist" data-label="Distortion">Polarized identity framing</td>
+          <td class="td-repair" data-label="Repair">Three shared civic goals independent of electoral cycles</td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
-</section>
+</div>
 
-<!-- ══ 05 ACTION — tools with hierarchy ══ -->
+<hr class="rule">
 
-<section class="action" id="action">
+<!-- TOOLS -->
+
+<div class="section" id="tools">
 <div class="wrap">
-  <div class="sec-label reveal">05 — Instruments</div>
-  <h2 class="sec-heading reveal">What do I do now?</h2>
-  <p class="sec-sub reveal">Start with the entry instruments. Use the analytical tools once you have a read. The full corpus has everything else.</p>
+  <div class="section-label reveal">Instruments</div>
+  <p class="tools-intro reveal">Start with the entry instruments. Use the analytical tools once you have a field read. All tools are free and open.</p>
 
-  <!-- Primary — entry + filter -->
-
-  <div class="tools-primary reveal">
+  <div class="tools-tier reveal">Entry instruments — start here</div>
+  <div class="tool-grid-primary reveal">
     <a href="https://nogameariel.github.io/field-signal-system/tools/signal-reading.html" class="tool-card" target="_blank">
-      <span class="tc-stage">Start here · Stage 1</span>
-      <div class="tc-name">Field Reading</div>
-      <p class="tc-desc">Initial read of system conditions — pattern type, signal quality, and pressure points. This is the entry instrument. Run it first on any system you want to understand.</p>
-      <span class="tc-arrow">→</span>
+      <span class="tool-stage">Stage 1 · Entry</span>
+      <div class="tool-name">Field Reading</div>
+      <p class="tool-desc">Initial read of system conditions — pattern type, signal quality, and pressure points. Run this first on any system you want to understand.</p>
+      <span class="tool-arrow">→</span>
     </a>
-    <a href="https://nogameariel.github.io/field-signal-system/tools/cpt-gate-instrument.html" class="tool-card" target="_blank">
-      <span class="tc-stage">Before you intervene · Filter</span>
-      <div class="tc-name">CPT Gate Instrument</div>
-      <p class="tc-desc">Before designing any response — is this system structurally ready for change? This gate sequence determines whether an intervention will land or be absorbed. Run it before you act.</p>
-      <span class="tc-arrow">→</span>
+    <a href="conditions-layer-clean.html" class="tool-card" target="_blank">
+      <span class="tool-stage">Stage 1 · Pre-deployment</span>
+      <div class="tool-name">Conditions Layer</div>
+      <p class="tool-desc">Before you build into a community — reads loop health, immune layer integrity, and vulnerability flags. Produces a field readiness verdict with exportable report.</p>
+      <span class="tool-arrow">→</span>
     </a>
   </div>
 
-  <!-- Secondary -->
-
-  <div class="tools-tier-label">Analytical instruments — use after the field read</div>
-  <div class="tools-secondary reveal">
+  <div class="tools-tier reveal" style="margin-top:20px;">Diagnostic instruments — use after the field read</div>
+  <div class="tool-grid-secondary reveal">
     <a href="https://nogameariel.github.io/field-signal-system/tools/cpt-gate-instrument.html" class="tool-card secondary" target="_blank">
-      <span class="tc-stage">Stage 2 · Diagnostic</span>
-      <div class="tc-name">Interruptibility Diagnostic</div>
-      <p class="tc-desc">Is this system open to change right now, or locked into a self-reinforcing loop?</p>
-      <span class="tc-arrow">→</span>
+      <span class="tool-stage">Stage 2 · Filter</span>
+      <div class="tool-name">Interruptibility Diagnostic</div>
+      <p class="tool-desc">Is this system open to change right now, or locked into a self-reinforcing loop?</p>
+      <span class="tool-arrow">→</span>
     </a>
     <a href="https://nogameariel.github.io/field-signal-system/tools/loop-logic-atlas.html" class="tool-card secondary" target="_blank">
-      <span class="tc-stage">Stage 2 · Mapping</span>
-      <div class="tc-name">Loop Transition Map</div>
-      <p class="tc-desc">Traces feedback loops through type and threshold — identifies where a system is in its cycle.</p>
-      <span class="tc-arrow">→</span>
+      <span class="tool-stage">Stage 2 · Mapping</span>
+      <div class="tool-name">Loop Transition Map</div>
+      <p class="tool-desc">Traces feedback loops through type and threshold. Identifies where a system is in its cycle.</p>
+      <span class="tool-arrow">→</span>
     </a>
     <a href="https://nogameariel.github.io/field-signal-system/tools/post-extraction.html" class="tool-card secondary" target="_blank">
-      <span class="tc-stage">Stage 3 · Planning</span>
-      <div class="tc-name">Regenerative Deployment Brief</div>
-      <p class="tc-desc">Generates a structured brief — tier classification, live signals, conflict detection, viable response pathways.</p>
-      <span class="tc-arrow">→</span>
+      <span class="tool-stage">Stage 3 · Planning</span>
+      <div class="tool-name">Regenerative Deployment Brief</div>
+      <p class="tool-desc">Generates a structured brief — tier classification, live signals, conflict detection, viable response pathways.</p>
+      <span class="tool-arrow">→</span>
     </a>
   </div>
 
-  <div style="margin-top:1.5rem;">
-    <a href="https://nogameariel.github.io/field-signal-system/tools/master-corpus.html" class="btn btn-ghost" target="_blank">Browse the full corpus →</a>
+  <div class="cpt-block reveal">
+    <div class="cpt-header">
+      <div class="cpt-title">Built on Condition Preservation Theory</div>
+      <div class="cpt-sub">Why the instruments work consistently across contexts</div>
+    </div>
+    <div class="axiom-grid">
+      <div class="axiom"><span class="axiom-n">A–01</span><span class="axiom-t">Systems occupy conditions that precede and constrain all possible interventions.</span></div>
+      <div class="axiom"><span class="axiom-n">A–02</span><span class="axiom-t">Conditions are structural, not perceptual — they exist independent of how they are described.</span></div>
+      <div class="axiom"><span class="axiom-n">A–03</span><span class="axiom-t">Interventions applied to non-preserving conditions will be absorbed, inverted, or destroyed.</span></div>
+      <div class="axiom"><span class="axiom-n">A–04</span><span class="axiom-t">The diagnostic act is itself a system intervention and must be conducted with rigor.</span></div>
+      <div class="axiom"><span class="axiom-n">A–05</span><span class="axiom-t">Signal integrity is the foundational prerequisite for all subsequent system work.</span></div>
+      <div class="axiom"><span class="axiom-n">→</span><span class="axiom-t" style="font-style:normal;font-size:12px;color:var(--ink-faint);">The theory doesn't change with context. Only the conditions do. That's what makes the diagnostic portable.</span></div>
+    </div>
+  </div>
+
+  <div style="margin-top:16px;" class="reveal">
+    <a href="https://nogameariel.github.io/field-signal-system/tools/master-corpus.html" class="btn-secondary" target="_blank">Browse the full corpus →</a>
   </div>
 </div>
-</section>
+</div>
 
-<!-- ══ 06 GROUNDING — CPT as constraint engine ══ -->
+<hr class="rule" style="margin:0 24px 48px;">
 
-<div class="grounding" id="grounding">
+<!-- PRINCIPLE -->
+
+<div class="principle">
+  <div class="principle-lines">
+    <div class="principle-line">We restore feedback.</div>
+    <div class="principle-line">We clarify signal.</div>
+    <div class="principle-line">We rebuild capacity.</div>
+    <div class="principle-line">We design repair.</div>
+  </div>
+  <div class="principle-attr">Field &amp; Signal — Guiding Principle</div>
+</div>
+
+<hr class="rule" style="margin:48px 24px 0;">
+
+<!-- CONTACT -->
+
+<div class="section" id="contact">
 <div class="wrap">
-  <div class="grounding-inner">
-    <div class="reveal">
-      <div class="grounding-label">Why the instruments work consistently</div>
-      <h2 class="grounding-title">Built on <em>Condition Preservation Theory</em></h2>
-      <p class="grounding-body">Every instrument in Field &amp; Signal produces consistent results across contexts — workplaces, governments, communities — because they all share the same structural foundation.</p>
-      <p class="grounding-body">That foundation is CPT: a constraint engine that runs before any intervention is designed. It answers one question first.</p>
-      <div class="constraint-block">
-        <p><strong>Is this system in a state where change can actually land?</strong><br>
-        If not, even a well-designed, well-resourced intervention will be absorbed, inverted, or destroyed by the conditions it enters. CPT identifies whether those conditions are present before you spend effort designing a response.</p>
-      </div>
-      <a href="https://nogameariel.github.io/field-signal-system/tools/cpt-foundation.html"
-         class="btn btn-ghost" target="_blank" style="margin-top:1.4rem;">Read the foundation →</a>
-    </div>
-    <div class="grounding-axioms reveal">
-      <div class="g-ax">
-        <span class="g-ax-n">A–01</span>
-        <span class="g-ax-t">Systems occupy conditions that precede and constrain all possible interventions.</span>
-      </div>
-      <div class="g-ax">
-        <span class="g-ax-n">A–02</span>
-        <span class="g-ax-t">Conditions are structural, not perceptual — they exist independent of how they are described.</span>
-      </div>
-      <div class="g-ax">
-        <span class="g-ax-n">A–03</span>
-        <span class="g-ax-t">Interventions applied to non-preserving conditions will be absorbed, inverted, or destroyed.</span>
-      </div>
-      <div class="g-ax">
-        <span class="g-ax-n">A–04</span>
-        <span class="g-ax-t">The diagnostic act is itself a system intervention and must be conducted with rigor.</span>
-      </div>
-      <div class="g-ax">
-        <span class="g-ax-n">A–05</span>
-        <span class="g-ax-t">Signal integrity is the foundational prerequisite for all subsequent system work.</span>
-      </div>
-      <div class="g-ax">
-        <span class="g-ax-n">→</span>
-        <span class="g-ax-t" style="font-style:normal;font-size:0.8rem;color:var(--ink-mid);">The theory doesn't change with context. Only the conditions do. That's what makes the diagnostic portable.</span>
-      </div>
+  <div class="section-label reveal">Go deeper</div>
+  <div class="contact-box reveal">
+    <div class="contact-title">Field &amp; Signal is seeking its first documented deployments.</div>
+    <p class="contact-text">If you're working inside a system under stress — a civic body, a community organization, a technology project, an institution — and you want to apply this framework in the field, reach out. The diagnostic work is free. Bounded institutional engagements are available by conversation.</p>
+    <div class="contact-links">
+      <a href="mailto:arcanastrategies@gmail.com" class="contact-link">
+        <span class="contact-link-label">Email</span>
+        arcanastrategies@gmail.com
+      </a>
+      <a href="https://arielwillingham.substack.com" class="contact-link" target="_blank" rel="noopener">
+        <span class="contact-link-label">Writing</span>
+        arielwillingham.substack.com
+      </a>
+      <a href="https://github.com/nogameariel/field-signal-system" class="contact-link" target="_blank" rel="noopener">
+        <span class="contact-link-label">GitHub</span>
+        nogameariel/field-signal-system
+      </a>
     </div>
   </div>
 </div>
 </div>
-
-<!-- CLOSING -->
-
-<section class="closing">
-<div class="wrap">
-  <div class="reveal">
-    <div class="closing-principle">
-      <p>We restore feedback.</p>
-      <p>We clarify signal.</p>
-      <p>We rebuild capacity.</p>
-      <p>We design repair.</p>
-    </div>
-    <p class="closing-attr">Field &amp; Signal — Guiding Principle</p>
-    <div class="closing-ctas">
-      <a href="https://nogameariel.github.io/field-signal-system/tools/master-corpus.html" class="btn btn-primary" target="_blank">Enter the full corpus →</a>
-      <a href="https://arielwillingham.substack.com" class="btn btn-ghost" target="_blank">Read the writing</a>
-      <a href="https://github.com/nogameariel/field-signal-system" class="btn btn-ghost" target="_blank">GitHub</a>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- FOOTER -->
 
 <footer>
-  <div class="ft-left">
-    <span>Field &amp; Signal</span> — An independent system by Ariel Willingham.<br>
-    Built on Condition Preservation Theory. All instruments open for use.
+  <div class="footer-left">
+    Field &amp; Signal — A. Willingham<br>
+    Free always · Open for use
   </div>
-  <ul class="ft-links">
+  <ul class="footer-links">
     <li><a href="https://github.com/nogameariel/field-signal-system" target="_blank">GitHub</a></li>
     <li><a href="https://arielwillingham.substack.com" target="_blank">Substack</a></li>
     <li><a href="mailto:arcanastrategies@gmail.com">Contact</a></li>
@@ -1068,11 +1307,11 @@ footer {
       if (e.isIntersecting) {
         const siblings = [...(e.target.parentElement?.querySelectorAll('.reveal') || [])];
         const idx = siblings.indexOf(e.target);
-        setTimeout(() => e.target.classList.add('in'), idx * 80);
+        setTimeout(() => e.target.classList.add('in'), idx * 70);
         obs.unobserve(e.target);
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
 </script>
 
